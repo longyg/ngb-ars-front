@@ -3,17 +3,21 @@ import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
 
-
+import { NavComponent } from './nav/nav.compponent';
 import { AppComponent } from './app.component';
-
+import { AppRoutingModule } from './app-routing.module';
+import { HomeComponent } from './home/home.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    NavComponent,
+    HomeComponent
   ],
   imports: [
     BrowserModule,
-    MDBBootstrapModule.forRoot()
+    MDBBootstrapModule.forRoot(),
+    AppRoutingModule
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
   providers: [],
