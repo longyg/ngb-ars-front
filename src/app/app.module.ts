@@ -7,12 +7,14 @@ import { NavComponent } from './nav/nav.compponent';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
+import { ArsComponent } from './ars/ars.component';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
-    HomeComponent
+    HomeComponent,
+    ArsComponent
   ],
   imports: [
     BrowserModule,
