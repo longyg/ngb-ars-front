@@ -1,2 +1,29 @@
-<h2>ARS</h2>
+<div class="card">
+  <div class="card-body">
+    <h1 class="card-title">ARS</h1>
+
+    <table class="table table-bordered">
+      <thead>
+        <tr>
+          <th>NE Type</th>
+          <th>NE Version</th>
+          <th>ARS</th>
+        </tr>
+      </thead>
+      <tbody *ngIf="arss">
+        <tr *ngFor="let a of arss">
+          <td>{{a.neType}}</td>
+          <td>{{a.neVersion}}</td>
+          <td>
+            <button>Object Model</button>
+            <button>PM Data Load</button>
+            <button>Counter</button>
+            <button>Alarm</button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
 
