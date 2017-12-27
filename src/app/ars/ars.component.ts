@@ -9,9 +9,9 @@ import {ArsService} from './ars.service';
 export class ArsComponent implements OnInit {
   arss: ARS[];
 
+  constructor(private arsService: ArsService) {}
+
   ngOnInit(): void {
-    this.arss = [
-      {id: 'sdfsdf', neType: 'CSCF', neVersion: '18.0', objectModel: 'df', pmDataload: 'df', counter: 'fdf', alarm: 'df'}
-    ];
+    this.arsService.list().subscribe(list => this.arss = list);
   }
 }

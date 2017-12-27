@@ -5,12 +5,11 @@ import {ARS} from './ars';
 
 @Injectable()
 export class ArsService {
-  url = 'http://localhost:8080/';
 
   constructor(private http: HttpClient) {}
 
   list(): Observable<ARS[]> {
-    return this.http.get<ARS[]>(this.url + 'ars');
+    return this.http.get<ARS[]>('/api/ars');
   }
 }
 

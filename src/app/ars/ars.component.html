@@ -2,7 +2,7 @@
   <div class="card-body">
     <h1 class="card-title">ARS</h1>
 
-    <table class="table table-bordered">
+    <table class="table table-bordered table-sm">
       <thead>
         <tr>
           <th>NE Type</th>
@@ -15,10 +15,10 @@
           <td>{{a.neType}}</td>
           <td>{{a.neVersion}}</td>
           <td>
-            <button>Object Model</button>
-            <button>PM Data Load</button>
-            <button>Counter</button>
-            <button>Alarm</button>
+            <button class="btn btn-primary btn-sm">{{a.objectModel}}</button>
+            <button class="btn btn-primary btn-sm">PM Data Load</button>
+            <button class="btn btn-primary btn-sm">Counter</button>
+            <button class="btn btn-primary btn-sm">Alarm</button>
           </td>
         </tr>
       </tbody>
