@@ -1,0 +1,30 @@
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title">Ne Type</h2>
+
+    <table class="table table-bordered table-sm">
+      <thead>
+      <tr>
+        <th>Name</th>
+        <th>Presentation</th>
+        <th>Description</th>
+        <th>Agent Class</th>
+      </tr>
+      </thead>
+      <tbody *ngIf="neTypes">
+      <tr *ngFor="let neType of neTypes">
+        <td>{{neType.name}}</td>
+        <td>{{neType.presentation}}</td>
+        <td>{{neType.description}}</td>
+        <td>{{neType.agentClass}}</td>
+        <td>
+          <button class="btn btn-primary btn-sm">Edit</button>
+          <button class="btn btn-primary btn-sm">Delete</button>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+  </div>
+</div>
+

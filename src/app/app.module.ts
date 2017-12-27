@@ -10,13 +10,16 @@ import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
 import { ArsComponent } from './ars/ars.component';
 import {ArsService} from './ars/ars.service';
+import { NetypeComponent } from './ne/netype/netype.component';
+import {NetypeService} from './ne/netype/netype.service';
 
 @NgModule({
   declarations: [
     AppComponent,
     NavComponent,
     HomeComponent,
-    ArsComponent
+    ArsComponent,
+    NetypeComponent
   ],
   imports: [
     BrowserModule,
@@ -25,7 +28,7 @@ import {ArsService} from './ars/ars.service';
     HttpClientModule
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
-  providers: [ArsService],
+  providers: [ArsService, NetypeService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
