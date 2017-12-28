@@ -1,6 +1,8 @@
 import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
+import { FormsModule} from '@angular/forms';
+import { ReactiveFormsModule } from '@angular/forms';
 
 import {MDBBootstrapModule} from 'angular-bootstrap-md';
 
@@ -25,7 +27,9 @@ import {NetypeService} from './ne/netype/netype.service';
     BrowserModule,
     MDBBootstrapModule.forRoot(),
     AppRoutingModule,
-    HttpClientModule
+    HttpClientModule,
+    FormsModule,
+    ReactiveFormsModule
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
   providers: [ArsService, NetypeService],

@@ -9,6 +9,7 @@
         <th>Presentation</th>
         <th>Description</th>
         <th>Agent Class</th>
+        <th>Actions</th>
       </tr>
       </thead>
       <tbody *ngIf="neTypes">
@@ -18,13 +19,67 @@
         <td>{{neType.description}}</td>
         <td>{{neType.agentClass}}</td>
         <td>
-          <button class="btn btn-primary btn-sm">Edit</button>
-          <button class="btn btn-primary btn-sm">Delete</button>
+          <a class="indigo-text waves-button" (click)="showEditForm(neType.id); form.show()" ><i class="fa fa-edit"></i> Edit</a>
+          <a class="red-text waves-button" (click)="form.show()" ><i class="fa fa-minus-circle"></i> Delete</a>
         </td>
       </tr>
       </tbody>
     </table>
 
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="showAddForm();form.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="form.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
   </div>
 </div>
+
+<!--Modal: Contact form-->
+<div mdbModal #form="mdb-modal" class="modal fade" id="neTypeForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog cascading-modal" role="document">
+    <!--Content-->
+    <div class="modal-content">
+
+      <!--Header-->
+      <div class="modal-header light-blue darken-3 white-text">
+        <h4 class="title" *ngIf="isUpdate"><i class="fa fa-edit"></i> Edit NE Type</h4>
+        <h4 class="title" *ngIf="!isUpdate"><i class="fa fa-plus-circle"></i> Add NE Type</h4>
+        <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="form.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body mb-0">
+        <form (submit)="onSubmit()" [formGroup]="neTypeForm">
+        <div class="md-form form-sm">
+          <i class="fa fa-tags prefix"></i>
+          <input mdbActive type="text" id="form19" class="form-control" formControlName="name" required>
+          <label for="form19">NE name</label>
+        </div>
+
+        <div class="md-form form-sm">
+          <i class="fa fa-television prefix"></i>
+          <input mdbActive type="text" id="form20" class="form-control" formControlName="presentation" required>
+          <label for="form20">NE Presentation</label>
+        </div>
+
+        <div class="md-form form-sm">
+          <i class="fa fa-tag prefix"></i>
+          <input mdbActive type="text" id="form21" class="form-control" formControlName="agentClass" required>
+          <label for="form21">Agent Class</label>
+        </div>
+
+        <div class="md-form form-sm">
+          <i class="fa fa-pencil prefix"></i>
+          <textarea mdbActive type="text" id="form8" class="md-textarea mb-0" formControlName="description"></textarea>
+          <label for="form8">Description</label>
+        </div>
+
+        <div class="text-center mt-1-half">
+          <button class="btn btn-success mb-2 waves-light" mdbRippleRadius><i class="fa fa-save ml-1"></i>  Save</button>
+        </div>
+        </form>
+      </div>
+    </div>
+    <!--/.Content-->
+  </div>
+</div>
+<!--Modal: Contact form-->
 

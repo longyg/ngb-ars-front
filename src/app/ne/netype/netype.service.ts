@@ -10,4 +10,8 @@ export class NetypeService {
   getNeTypes(): Observable<NeType[]> {
     return this.http.get<NeType[]>('/api/netype');
   }
+
+  getNeType(id: string): Observable<NeType> {
+    return this.http.get<NeType>('/api/getNeType?id=' + id);
+  }
 }
