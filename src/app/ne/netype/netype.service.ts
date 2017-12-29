@@ -2,16 +2,26 @@ import {Injectable} from '@angular/core';
 import {Observable} from 'rxjs/Observable';
 import {NeType} from './netype';
 import {HttpClient} from '@angular/common/http';
+import 'rxjs/add/operator/toPromise';
 
 @Injectable()
 export class NetypeService {
   constructor(private http: HttpClient) {}
 
-  getNeTypes(): Observable<NeType[]> {
+  getAll(): Observable<NeType[]> {
     return this.http.get<NeType[]>('/api/netype');
   }
 
-  getNeType(id: string): Observable<NeType> {
-    return this.http.get<NeType>('/api/getNeType?id=' + id);
+  update(neType: NeType): Observable<Object> {
+    return this.http.put<Object>('/api/netype/' + neType.id, neType);
+  }
+
+  add(neType: NeType): Observable<NeType> {
+    return this.http.post<NeType>('/api/netype', neType);
+  }
+
+  private handleError(error: any): Promise<any> {
+    console.error('Some error occured', error);
+    return Promise.reject(error.message || error);
   }
 }

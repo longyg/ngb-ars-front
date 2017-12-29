@@ -10,56 +10,37 @@ import {FormControl, FormGroup, Validators} from '@angular/forms';
 })
 export class NetypeComponent implements OnInit {
   neTypes: NeType[];
-  isUpdate: boolean;
+  newNeType: NeType = new NeType();
+  editingNeType: NeType = new NeType();
+  editing: boolean;
 
-  neTypeForm: FormGroup;
-  name: FormControl;
-  presentation: FormControl;
-  agentClass: FormControl;
-  description: FormControl;
+  persistStatus = {
+    success: true,
+    title: 'NE Type',
+    error: ''
+  };
 
   constructor(private neTypeService: NetypeService) { }
 
   ngOnInit() {
-    this.neTypeService.getNeTypes().subscribe(list => this.neTypes = list);
-    this.createEmptyForm();
+    this.neTypeService.getAll().subscribe(list => this.neTypes = list);
   }
 
   showAddForm(): void {
-    this.isUpdate = false;
-    this.createEmptyForm();
-  }
-
-  createEmptyForm(): void {
-    this.name = new FormControl('', Validators.required);
-    this.presentation = new FormControl('', Validators.required);
-    this.agentClass = new FormControl('', Validators.required);
-    this.description = new FormControl('');
-
-    this.neTypeForm = new FormGroup({
-      name: this.name,
-      presentation: this.presentation,
-      agentClass: this.agentClass,
-      description: this.description
-    });
+    this.editing = false;
   }
 
   showEditForm(id: string): void {
-    this.isUpdate = true;
-
-    const neType = this.getNeTypeById(id);
-
-    this.name = new FormControl('', Validators.required);
-    this.presentation = new FormControl(neType.presentation, Validators.required);
-    this.agentClass = new FormControl(neType.agentClass, Validators.required);
-    this.description = new FormControl(neType.description);
-
-    this.neTypeForm = new FormGroup({
-      name: this.name,
-      presentation: this.presentation,
-      agentClass: this.agentClass,
-      description: this.description
-    });
+    this.editing = true;
+    const type = this.getNeTypeById(id);
+    if (null != type) {
+      this.editingNeType = new NeType();
+      this.editingNeType.id = type.id;
+      this.editingNeType.name = type.name;
+      this.editingNeType.presentation = type.presentation;
+      this.editingNeType.agentClass = type.agentClass;
+      this.editingNeType.description = type.description;
+    }
   }
 
   getNeTypeById(id: string): NeType {
@@ -72,6 +53,48 @@ export class NetypeComponent implements OnInit {
   }
 
   onSubmit(): void {
+    // Edit
+    if (this.editing) {
+      this.neTypeService.update(this.editingNeType)
+        .subscribe(
+          (updatedNeType: NeType) => {
+            const existingNeType = this.neTypes.find(neType => neType.id === updatedNeType.id);
+            Object.assign(existingNeType, updatedNeType);
+            this.persistStatus = {
+              success: true,
+              title: 'NE Type',
+              error: ''
+            };
+          },
+          err => {
+            this.persistStatus = {
+              success: false,
+              title: 'NE Type',
+              error: err
+            };
+          }
+        );
 
+    } else {
+      // Add
+      this.neTypeService.add(this.newNeType)
+        .subscribe(
+          neType => {
+            this.neTypes.push(neType);
+            this.persistStatus = {
+              success: true,
+              title: 'NE Type',
+              error: ''
+            };
+          },
+          err => {
+            this.persistStatus = {
+              success: false,
+              title: 'NE Type',
+              error: err
+            };
+          }
+          );
+    }
   }
 }

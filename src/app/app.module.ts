@@ -2,18 +2,17 @@ import { BrowserModule } from '@angular/platform-browser';
 import { NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { HttpClientModule } from '@angular/common/http';
 import { FormsModule} from '@angular/forms';
-import { ReactiveFormsModule } from '@angular/forms';
 
-import {MDBBootstrapModule} from 'angular-bootstrap-md';
+import { MDBBootstrapModule } from 'angular-bootstrap-md';
 
 import { NavComponent } from './nav/nav.compponent';
 import { AppComponent } from './app.component';
 import { AppRoutingModule } from './app-routing.module';
 import { HomeComponent } from './home/home.component';
 import { ArsComponent } from './ars/ars.component';
-import {ArsService} from './ars/ars.service';
+import { ArsService } from './ars/ars.service';
 import { NetypeComponent } from './ne/netype/netype.component';
-import {NetypeService} from './ne/netype/netype.service';
+import { NetypeService } from './ne/netype/netype.service';
 
 @NgModule({
   declarations: [
@@ -28,8 +27,7 @@ import {NetypeService} from './ne/netype/netype.service';
     MDBBootstrapModule.forRoot(),
     AppRoutingModule,
     HttpClientModule,
-    FormsModule,
-    ReactiveFormsModule
+    FormsModule
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
   providers: [ArsService, NetypeService],
