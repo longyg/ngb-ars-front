@@ -1,7 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {NeType} from './netype';
 import {NetypeService} from './netype.service';
-import {FormControl, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-netype',
@@ -14,7 +13,7 @@ export class NetypeComponent implements OnInit {
   editingNeType: NeType = new NeType();
   editing: boolean;
 
-  persistStatus = {
+  status = {
     success: true,
     title: 'NE Type',
     error: ''
@@ -28,6 +27,7 @@ export class NetypeComponent implements OnInit {
 
   showAddForm(): void {
     this.editing = false;
+    this.newNeType = new NeType();
   }
 
   showEditForm(id: string): void {
@@ -60,14 +60,14 @@ export class NetypeComponent implements OnInit {
           (updatedNeType: NeType) => {
             const existingNeType = this.neTypes.find(neType => neType.id === updatedNeType.id);
             Object.assign(existingNeType, updatedNeType);
-            this.persistStatus = {
+            this.status = {
               success: true,
               title: 'NE Type',
               error: ''
             };
           },
           err => {
-            this.persistStatus = {
+            this.status = {
               success: false,
               title: 'NE Type',
               error: err
@@ -81,14 +81,14 @@ export class NetypeComponent implements OnInit {
         .subscribe(
           neType => {
             this.neTypes.push(neType);
-            this.persistStatus = {
+            this.status = {
               success: true,
               title: 'NE Type',
               error: ''
             };
           },
           err => {
-            this.persistStatus = {
+            this.status = {
               success: false,
               title: 'NE Type',
               error: err

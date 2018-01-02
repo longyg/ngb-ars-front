@@ -13,6 +13,8 @@ import { ArsComponent } from './ars/ars.component';
 import { ArsService } from './ars/ars.service';
 import { NetypeComponent } from './ne/netype/netype.component';
 import { NetypeService } from './ne/netype/netype.service';
+import { StatusComponent } from './common/status/status.component';
+import { PaginationComponent } from './common/pagination/pagination.component';
 
 @NgModule({
   declarations: [
@@ -20,7 +22,9 @@ import { NetypeService } from './ne/netype/netype.service';
     NavComponent,
     HomeComponent,
     ArsComponent,
-    NetypeComponent
+    NetypeComponent,
+    StatusComponent,
+    PaginationComponent
   ],
   imports: [
     BrowserModule,

@@ -5,6 +5,7 @@
     <table class="table table-bordered table-sm">
       <thead>
       <tr>
+        <th><input type="checkbox"></th>
         <th>Name</th>
         <th>Presentation</th>
         <th>Description</th>
@@ -14,6 +15,7 @@
       </thead>
       <tbody *ngIf="neTypes">
       <tr *ngFor="let neType of neTypes">
+        <th><input type="checkbox"></th>
         <td>{{neType.name}}</td>
         <td>{{neType.presentation}}</td>
         <td>{{neType.description}}</td>
@@ -25,6 +27,8 @@
       </tr>
       </tbody>
     </table>
+
+    <app-pagination></app-pagination>
 
     <button type="button" class="btn btn-sm btn-outline-primary" (click)="showAddForm();form.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
     <button type="button" class="btn btn-sm btn-outline-danger" (click)="form.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
@@ -50,11 +54,18 @@
         <form #neTypeForm="ngForm" (ngSubmit)="onSubmit();form.hide();style.show()" novalidate>
           <div class="md-form form-sm">
             <i class="fa fa-tags prefix"></i>
-            <input *ngIf="!editing" mdbActive type="text" #name="ngModel" id="form19"
+            <input *ngIf="!editing" mdbActive type="text" #nename="ngModel" id="form19"
                    class="form-control" name="name" [(ngModel)]="newNeType.name" required>
-            <input *ngIf="editing" mdbActive type="text" #name="ngModel" id="form19"
+            <input *ngIf="editing" mdbActive type="text" #nename="ngModel" id="form19"
                    class="form-control" name="name" [(ngModel)]="editingNeType.name" required value="{{editingNeType.name}}">
             <label for="form19">NE name</label>
+          </div>
+          <div *ngIf="nename && nename.invalid && (nename.dirty || nename.touched)"
+               class="alert alert-danger">
+
+            <div *ngIf="nename.errors.required">
+              NE name is required.
+            </div>
           </div>
 
           <div class="md-form form-sm">
@@ -95,7 +106,7 @@
 </div>
 
 <div mdbModal #style="mdb-modal" class="modal fade" id="centralModalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div *ngIf="persistStatus.success" class="modal-dialog modal-notify modal-success" role="document">
+  <div *ngIf="status.success" class="modal-dialog modal-notify modal-success" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <p class="heading lead">Success</p>
@@ -106,11 +117,7 @@
       <div class="modal-body">
         <div class="text-center">
           <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
-          <p>{{persistStatus.title}} is
-            <span *ngIf="editing">updated </span>
-            <span *ngIf="!editing">added </span>
-            successfully!
-          </p>
+          <p>{{status.message}}</p>
         </div>
       </div>
       <div class="modal-footer justify-content-center">
@@ -119,7 +126,7 @@
     </div>
   </div>
 
-  <div *ngIf="!persistStatus.success" class="modal-dialog modal-notify modal-danger" role="document">
+  <div *ngIf="!status.success" class="modal-dialog modal-notify modal-danger" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <p class="heading lead">Error</p>
@@ -130,12 +137,7 @@
       <div class="modal-body">
         <div class="text-center">
           <i class="fa fa-close fa-4x mb-3 animated rotateIn"></i>
-          <p class="red-text">{{persistStatus.title}} is
-            <span *ngIf="editing">updated </span>
-            <span *ngIf="!editing">added </span>
-            failed!
-          </p>
-          <p class="red-text">{{persistStatus.error}}</p>
+          <p class="red-text">{{status.message}}</p>
         </div>
       </div>
       <div class="modal-footer justify-content-center">
