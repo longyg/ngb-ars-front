@@ -21,8 +21,8 @@
         <td>{{neType.description}}</td>
         <td>{{neType.agentClass}}</td>
         <td>
-          <a class="indigo-text waves-button" (click)="showEditForm(neType.id); form.show()" ><i class="fa fa-edit"></i> Edit</a>
-          <a class="red-text waves-button" (click)="form.show()" ><i class="fa fa-minus-circle"></i> Delete</a>
+          <a class="indigo-text waves-button" (click)="showEditForm(neType.id); formModal.show()" ><i class="fa fa-edit"></i> Edit</a>
+          <a class="red-text waves-button" (click)="formModal.show()" ><i class="fa fa-minus-circle"></i> Delete</a>
         </td>
       </tr>
       </tbody>
@@ -30,69 +30,49 @@
 
     <app-pagination></app-pagination>
 
-    <button type="button" class="btn btn-sm btn-outline-primary" (click)="showAddForm();form.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
-    <button type="button" class="btn btn-sm btn-outline-danger" (click)="form.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="showAddForm();formModal.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="showAddForm();formModal.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
   </div>
 </div>
 
-<!--Modal: Contact form-->
-<div mdbModal #form="mdb-modal" class="modal fade" id="neTypeForm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<!--Modal: Add Ne Type Form-->
+<div mdbModal #formModal="mdb-modal" class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog cascading-modal" role="document">
-    <!--Content-->
-    <div class="modal-content">
 
+    <!--Add Form-->
+    <div *ngIf="!editing" class="modal-content">
       <!--Header-->
       <div class="modal-header light-blue darken-3 white-text">
-        <h4 class="title" *ngIf="editing"><i class="fa fa-edit"></i> Edit NE Type</h4>
-        <h4 class="title" *ngIf="!editing"><i class="fa fa-plus-circle"></i> Add NE Type</h4>
-        <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="form.hide()">
+        <h4 class="title"><i class="fa fa-plus-circle"></i> Add NE Type</h4>
+        <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="formModal.hide()">
           <span aria-hidden="true">×</span>
         </button>
       </div>
       <!--Body-->
       <div class="modal-body mb-0">
-        <form #neTypeForm="ngForm" (ngSubmit)="onSubmit();form.hide();style.show()" novalidate>
+        <form [formGroup]="addForm" (ngSubmit)="onAddSubmit();formModal.hide();status.show()" novalidate>
           <div class="md-form form-sm">
             <i class="fa fa-tags prefix"></i>
-            <input *ngIf="!editing" mdbActive type="text" #nename="ngModel" id="form19"
-                   class="form-control" name="name" [(ngModel)]="newNeType.name" required>
-            <input *ngIf="editing" mdbActive type="text" #nename="ngModel" id="form19"
-                   class="form-control" name="name" [(ngModel)]="editingNeType.name" required value="{{editingNeType.name}}">
-            <label for="form19">NE name</label>
-          </div>
-          <div *ngIf="nename && nename.invalid && (nename.dirty || nename.touched)"
-               class="alert alert-danger">
-
-            <div *ngIf="nename.errors.required">
-              NE name is required.
-            </div>
+            <input mdbActive type="text" id="form1" class="form-control" formControlName="name">
+            <label for="form1">NE name</label>
           </div>
 
           <div class="md-form form-sm">
             <i class="fa fa-television prefix"></i>
-            <input *ngIf="!editing" mdbActive type="text" id="form20"
-                   class="form-control" name="presentation" [(ngModel)]="newNeType.presentation" required>
-            <input *ngIf="editing" mdbActive type="text" id="form20"
-                   class="form-control" name="presentation" [(ngModel)]="editingNeType.presentation" required value="{{editingNeType.presentation}}">
-            <label for="form20">NE Presentation</label>
+            <input mdbActive type="text" id="form2" class="form-control" formControlName="presentation">
+            <label for="form2">NE Presentation</label>
           </div>
 
           <div class="md-form form-sm">
             <i class="fa fa-tag prefix"></i>
-            <input *ngIf="!editing" mdbActive type="text" id="form21"
-                   class="form-control" name="agentClass" [(ngModel)]="newNeType.agentClass" required>
-            <input *ngIf="editing" mdbActive type="text" id="form21"
-                   class="form-control" name="agentClass" [(ngModel)]="editingNeType.agentClass" required value="{{editingNeType.agentClass}}">
-            <label for="form21">Agent Class</label>
+            <input mdbActive type="text" id="form3" class="form-control" formControlName="agentClass">
+            <label for="form3">Agent Class</label>
           </div>
 
           <div class="md-form form-sm">
             <i class="fa fa-pencil prefix"></i>
-            <textarea *ngIf="!editing" mdbActive type="text" id="form8"
-                      class="md-textarea mb-0" name="description" [(ngModel)]="newNeType.description"></textarea>
-            <textarea *ngIf="editing" mdbActive type="text" id="form8"
-                      class="md-textarea mb-0" name="description" [(ngModel)]="editingNeType.description">{{editingNeType.description}}</textarea>
-            <label for="form8">Description</label>
+            <textarea mdbActive type="text" id="form4" formControlName="description" class="md-textarea mb-0"></textarea>
+            <label for="form4">Description</label>
           </div>
 
           <div class="text-center mt-1-half">
@@ -101,11 +81,56 @@
         </form>
       </div>
     </div>
-    <!--/.Content-->
+
+    <!-- Edit Form -->
+    <div *ngIf="editing" class="modal-content">
+      <!--Header-->
+      <div class="modal-header light-blue darken-3 white-text">
+        <h4 class="title"><i class="fa fa-edit"></i> Edit NE Type</h4>
+        <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="formModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body mb-0">
+        <form [formGroup]="editForm" (ngSubmit)="onEditSubmit();formModal.hide();status.show()" novalidate>
+          <div class="md-form form-sm">
+            <i class="fa fa-tags prefix"></i>
+            <input mdbActive type="text" id="form11" class="form-control" formControlName="name">
+            <label for="form11">NE name</label>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-television prefix"></i>
+            <input mdbActive type="text" id="form12" class="form-control" formControlName="presentation">
+            <label for="form12">NE Presentation</label>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-tag prefix"></i>
+            <input mdbActive type="text" id="form13" class="form-control" formControlName="agentClass">
+            <label for="form13">Agent Class</label>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-pencil prefix"></i>
+            <textarea mdbActive type="text" id="form14" formControlName="description" class="md-textarea mb-0"></textarea>
+            <label for="form14">Description</label>
+          </div>
+
+          <div class="text-center mt-1-half">
+            <button type="submit" class="btn btn-success mb-2 waves-light" mdbRippleRadius><i class="fa fa-save ml-1"></i>  Save</button>
+          </div>
+        </form>
+
+        <p>Form value: {{ editForm.value | json }}</p>
+        <p>Form status: {{ editForm.status | json }}</p>
+      </div>
+    </div>
   </div>
 </div>
 
-<div mdbModal #style="mdb-modal" class="modal fade" id="centralModalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div mdbModal #status="mdb-modal" class="modal fade" id="centralModalSuccess" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div *ngIf="status.success" class="modal-dialog modal-notify modal-success" role="document">
     <div class="modal-content">
       <div class="modal-header">

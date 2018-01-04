@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import {NeType} from './netype';
 import {NetypeService} from './netype.service';
+import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 
 @Component({
   selector: 'app-netype',
@@ -9,9 +10,9 @@ import {NetypeService} from './netype.service';
 })
 export class NetypeComponent implements OnInit {
   neTypes: NeType[];
-  newNeType: NeType = new NeType();
-  editingNeType: NeType = new NeType();
-  editing: boolean;
+  editing = false;
+  addForm: FormGroup;
+  editForm: FormGroup;
 
   status = {
     success: true,
@@ -19,27 +20,50 @@ export class NetypeComponent implements OnInit {
     error: ''
   };
 
-  constructor(private neTypeService: NetypeService) { }
+  constructor(
+    private neTypeService: NetypeService,
+    private fb: FormBuilder
+  ) {}
 
   ngOnInit() {
     this.neTypeService.getAll().subscribe(list => this.neTypes = list);
+    this.addForm = this.createEmptyForm();
+    this.editForm = this.createEmptyForm();
+  }
+
+  createEmptyForm(): FormGroup {
+    return this.fb.group({
+      name: '',
+      presentation: '',
+      agentClass: '',
+      description: ''
+    });
   }
 
   showAddForm(): void {
     this.editing = false;
-    this.newNeType = new NeType();
+    this.addForm.reset();
+    this.addForm = this.fb.group({
+      name: ['', Validators.required],
+      presentation: ['', Validators.required],
+      agentClass: ['', Validators.required],
+      description: ['']
+    });
   }
 
   showEditForm(id: string): void {
     this.editing = true;
+    this.editForm.reset();
+
     const type = this.getNeTypeById(id);
+
     if (null != type) {
-      this.editingNeType = new NeType();
-      this.editingNeType.id = type.id;
-      this.editingNeType.name = type.name;
-      this.editingNeType.presentation = type.presentation;
-      this.editingNeType.agentClass = type.agentClass;
-      this.editingNeType.description = type.description;
+      this.editForm = this.fb.group({
+        name: [type.name, Validators.required],
+        presentation: [type.presentation, Validators.required],
+        agentClass: [type.agentClass, Validators.required],
+        description: [type.description]
+      });
     }
   }
 
@@ -52,6 +76,15 @@ export class NetypeComponent implements OnInit {
     return null;
   }
 
+  onAddSubmit(): void {
+
+  }
+
+  onEditSubmit(): void {
+
+  }
+
+  /**
   onSubmit(): void {
     // Edit
     if (this.editing) {
@@ -96,5 +129,5 @@ export class NetypeComponent implements OnInit {
           }
           );
     }
-  }
+  }**/
 }
