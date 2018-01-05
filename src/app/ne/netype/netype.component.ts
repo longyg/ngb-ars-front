@@ -2,6 +2,8 @@ import { Component, OnInit } from '@angular/core';
 import {NeType} from './netype';
 import {NetypeService} from './netype.service';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
+import {Status} from '../../common/status/status';
+import 'rxjs/add/operator/finally';
 
 @Component({
   selector: 'app-netype',
@@ -13,12 +15,11 @@ export class NetypeComponent implements OnInit {
   editing = false;
   addForm: FormGroup;
   editForm: FormGroup;
-
-  status = {
-    success: true,
-    title: 'NE Type',
-    error: ''
-  };
+  submitComplete: boolean;
+  isLoading = false;
+  status: Status;
+  editId: string;
+  delNeType: NeType;
 
   constructor(
     private neTypeService: NetypeService,
@@ -26,9 +27,14 @@ export class NetypeComponent implements OnInit {
   ) {}
 
   ngOnInit() {
-    this.neTypeService.getAll().subscribe(list => this.neTypes = list);
+    this.getNeTypes();
     this.addForm = this.createEmptyForm();
     this.editForm = this.createEmptyForm();
+  }
+
+  getNeTypes() {
+    this.isLoading = true;
+    this.neTypeService.getAll().finally(() => this.isLoading = false).subscribe(list => this.neTypes = list);
   }
 
   createEmptyForm(): FormGroup {
@@ -42,6 +48,7 @@ export class NetypeComponent implements OnInit {
 
   showAddForm(): void {
     this.editing = false;
+    this.submitComplete = false;
     this.addForm.reset();
     this.addForm = this.fb.group({
       name: ['', Validators.required],
@@ -52,7 +59,9 @@ export class NetypeComponent implements OnInit {
   }
 
   showEditForm(id: string): void {
+    this.editId = id;
     this.editing = true;
+    this.submitComplete = false;
     this.editForm.reset();
 
     const type = this.getNeTypeById(id);
@@ -68,66 +77,102 @@ export class NetypeComponent implements OnInit {
   }
 
   getNeTypeById(id: string): NeType {
+    let neType: NeType;
     for (const type of this.neTypes) {
       if (type.id === id) {
-        return type;
+        neType = type;
       }
     }
-    return null;
+    return neType;
   }
 
   onAddSubmit(): void {
+    const neType = new NeType();
+    neType.name = this.aName.value;
+    neType.presentation = this.aPresentation.value;
+    neType.agentClass = this.aAgentClass.value;
+    neType.description = this.aDescription.value;
 
+    this.neTypeService.add(neType)
+      .subscribe(
+        savedNeType => {
+          this.neTypes.push(savedNeType);
+          this.status = {
+            success: true,
+            message: 'NE Type "' + neType.name + '" is added successfully!'
+          };
+          this.submitComplete = true;
+        },
+        err => {
+          this.status = {
+            success: false,
+            message: 'NE Type "' + neType.name + '" is added failed!'
+          };
+          this.submitComplete = true;
+        }
+      );
   }
 
   onEditSubmit(): void {
+    const neType = new NeType();
+    neType.id = this.editId;
+    neType.name = this.eName.value;
+    neType.presentation = this.ePresentation.value;
+    neType.agentClass = this.eAgentClass.value;
+    neType.description = this.eDescription.value;
 
+    this.neTypeService.update(neType)
+      .subscribe(
+        (updatedNeType: NeType) => {
+          const existingNeType = this.neTypes.find(type => type.id === updatedNeType.id);
+          Object.assign(existingNeType, updatedNeType);
+          this.status = {
+            success: true,
+            message: 'NE Type "' + neType.name + '" is updated successfully!'
+          };
+          this.submitComplete = true;
+        },
+        err => {
+          this.status = {
+            success: false,
+            message: 'NE Type "' + neType.name + '" is updated failed!'
+          };
+          this.submitComplete = true;
+        }
+      );
   }
 
-  /**
-  onSubmit(): void {
-    // Edit
-    if (this.editing) {
-      this.neTypeService.update(this.editingNeType)
-        .subscribe(
-          (updatedNeType: NeType) => {
-            const existingNeType = this.neTypes.find(neType => neType.id === updatedNeType.id);
-            Object.assign(existingNeType, updatedNeType);
-            this.status = {
-              success: true,
-              title: 'NE Type',
-              error: ''
-            };
-          },
-          err => {
-            this.status = {
-              success: false,
-              title: 'NE Type',
-              error: err
-            };
-          }
-        );
+  deleteNeType(id: string): void {
+    this.submitComplete = false;
+    this.delNeType = this.getNeTypeById(id);
+  }
 
-    } else {
-      // Add
-      this.neTypeService.add(this.newNeType)
-        .subscribe(
-          neType => {
-            this.neTypes.push(neType);
-            this.status = {
-              success: true,
-              title: 'NE Type',
-              error: ''
-            };
-          },
-          err => {
-            this.status = {
-              success: false,
-              title: 'NE Type',
-              error: err
-            };
-          }
-          );
-    }
-  }**/
+  submitDelete(): void {
+    this.neTypeService.delete(this.delNeType.id).subscribe(
+      data => {
+        this.neTypes = this.neTypes.filter(obj => obj.id !== this.delNeType.id);
+        this.status = {
+          success: true,
+          message: 'NE Type "' + this.delNeType.name + '" is deleted successfully!'
+        };
+        this.submitComplete = true;
+      },
+      err => {
+        this.status = {
+          success: true,
+          message: 'NE Type "' + this.delNeType.name + '" is deleted failed!'
+        };
+        this.submitComplete = true;
+      }
+    );
+  }
+
+  get aName() { return this.addForm.get('name'); }
+  get aPresentation() { return this.addForm.get('presentation'); }
+  get aAgentClass() { return this.addForm.get('agentClass'); }
+  get aDescription() { return this.addForm.get('description'); }
+  get eName() { return this.editForm.get('name'); }
+  get ePresentation() { return this.editForm.get('presentation'); }
+  get eAgentClass() { return this.editForm.get('agentClass'); }
+  get eDescription() { return this.editForm.get('description'); }
 }
