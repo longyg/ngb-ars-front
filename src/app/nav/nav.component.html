@@ -2,7 +2,7 @@
 <mdb-navbar SideClass="navbar navbar-expand-lg navbar-dark indigo">
 
   <!-- Navbar brand -->
-  <logo><a class="navbar-brand" routerLink="/home">ARS TOOLSET</a></logo>
+  <logo><a class="navbar-brand" href="/home">ARS TOOLSET</a></logo>
 
   <!-- Collapsible content -->
   <links>
@@ -10,18 +10,15 @@
     <!-- Links -->
     <ul class="navbar-nav mr-auto">
       <li class="nav-item">
-        <a class="nav-link waves-light" routerLink="/home" mdbRippleRadius>Home</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link waves-light" mdbRippleRadius routerLink="/ars">ARS</a>
+        <a class="nav-link waves-light" mdbRippleRadius href="/ars">ARS</a>
       </li>
 
       <!-- Dropdown -->
       <li class="nav-item dropdown" dropdown>
-        <a dropdownToggle mdbRippleRadius type="button" class="nav-link dropdown-toggle waves-light" mdbRippleRadius>
+        <a dropdownToggle type="button" class="nav-link dropdown-toggle waves-light" mdbRippleRadius>
           Admin<span class="caret"></span></a>
         <div *dropdownMenu class="dropdown-menu dropdown dropdown-primary" role="menu">
-          <a class="dropdown-item waves-light" mdbRippleRadius routerLink="/netype">Ne Type</a>
+          <a class="dropdown-item waves-light" mdbRippleRadius href="/netype">Ne Type</a>
           <a class="dropdown-item waves-light" mdbRippleRadius href="#">Another action</a>
           <a class="dropdown-item waves-light" mdbRippleRadius href="#">Something else here</a>
           <div class="divider dropdown-divider"></div>

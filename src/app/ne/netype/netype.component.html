@@ -5,7 +5,7 @@
     <table class="table table-bordered table-sm">
       <thead>
       <tr>
-        <th><input type="checkbox"></th>
+        <th style="text-align: center"><input type="checkbox"></th>
         <th>Name</th>
         <th>Presentation</th>
         <th>Description</th>
@@ -18,7 +18,7 @@
         <td colspan="6"><i>Loading ... </i></td>
       </tr>
       <tr *ngFor="let neType of neTypes">
-        <td><input type="checkbox"></td>
+        <td style="text-align: center;"><input type="checkbox"></td>
         <td>{{neType.name}}</td>
         <td>{{neType.presentation}}</td>
         <td>{{neType.description}}</td>
@@ -228,7 +228,7 @@
 
 <!-- Delete confirmation modal -->
 <div mdbModal [config]="{ignoreBackdropClick: true}" #confirmModal="mdb-modal" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div class="modal-dialog modal-notify modal-warning" role="document">
+  <div *ngIf="deleting" class="modal-dialog modal-notify modal-warning" role="document">
     <div class="modal-content">
       <div class="modal-header">
         <p class="heading lead">Confirmation</p>

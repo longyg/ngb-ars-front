@@ -20,6 +20,7 @@ export class NetypeComponent implements OnInit {
   status: Status;
   editId: string;
   delNeType: NeType;
+  deleting = false;
 
   constructor(
     private neTypeService: NetypeService,
@@ -143,6 +144,7 @@ export class NetypeComponent implements OnInit {
   }
 
   deleteNeType(id: string): void {
+    this.deleting = true;
     this.submitComplete = false;
     this.delNeType = this.getNeTypeById(id);
   }
