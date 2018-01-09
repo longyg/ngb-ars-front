@@ -15,6 +15,7 @@ import { NetypeComponent } from './ne/netype/netype.component';
 import { NetypeService } from './ne/netype/netype.service';
 import { StatusComponent } from './common/status/status.component';
 import { PaginationComponent } from './common/pagination/pagination.component';
+import { IfoComponent } from './ne/ifo/ifo.component';
 
 @NgModule({
   declarations: [
@@ -24,7 +25,8 @@ import { PaginationComponent } from './common/pagination/pagination.component';
     ArsComponent,
     NetypeComponent,
     StatusComponent,
-    PaginationComponent
+    PaginationComponent,
+    IfoComponent
   ],
   imports: [
     BrowserModule,
