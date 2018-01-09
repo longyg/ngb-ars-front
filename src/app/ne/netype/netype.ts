@@ -4,4 +4,5 @@ export class NeType {
   presentation: string;
   description: string;
   agentClass: string;
+  select: boolean;
 }

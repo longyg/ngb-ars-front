@@ -5,7 +5,9 @@
     <table class="table table-bordered table-sm">
       <thead>
       <tr>
-        <th style="text-align: center"><input type="checkbox"></th>
+        <th style="text-align: center">
+          <input type="checkbox" [checked]="isSelectAll" (change)="selectAll()">
+        </th>
         <th>Name</th>
         <th>Presentation</th>
         <th>Description</th>
@@ -18,7 +20,9 @@
         <td colspan="6"><i>Loading ... </i></td>
       </tr>
       <tr *ngFor="let neType of neTypes">
-        <td style="text-align: center;"><input type="checkbox"></td>
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="neType.select" (change)="select(neType)">
+        </td>
         <td>{{neType.name}}</td>
         <td>{{neType.presentation}}</td>
         <td>{{neType.description}}</td>
@@ -34,7 +38,7 @@
     <app-pagination></app-pagination>
 
     <button type="button" class="btn btn-sm btn-outline-primary" (click)="showAddForm();formModal.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
-    <button type="button" class="btn btn-sm btn-outline-danger" (click)="showAddForm();formModal.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteNeTypes();confirmModal.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
   </div>
 </div>
 
@@ -239,12 +243,12 @@
       <div class="modal-body">
         <div class="text-center">
           <i class="fa fa-warning fa-4x mb-3 animated rotateIn"></i>
-          <p>Do you want to delete NE type: {{delNeType.name}} ?</p>
+          <p>Do you want to delete NE type: <span *ngFor="let neType of delNeTypes">[{{neType.name}}] </span>?</p>
         </div>
       </div>
       <div class="modal-footer justify-content-center">
         <a type="button" class="btn btn-secondary waves-light" data-dismiss="modal" (click)="confirmModal.hide()" mdbRippleRadius>Cancel</a>
-        <a type="button" class="btn btn-primary waves-light" (click)="submitDelete();confirmModal.hide();statusModal.show()" mdbRippleRadius>Confirm</a>
+        <a type="button" class="btn btn-primary waves-light" (click)="submitDeletes();confirmModal.hide();statusModal.show()" mdbRippleRadius>Confirm</a>
       </div>
     </div>
   </div>

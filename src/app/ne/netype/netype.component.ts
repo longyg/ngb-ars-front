@@ -19,8 +19,10 @@ export class NetypeComponent implements OnInit {
   isLoading = false;
   status: Status;
   editId: string;
-  delNeType: NeType;
+  delNeTypes: NeType[];
   deleting = false;
+  isSelectAll = false;
+  deleteDisabled = true;
 
   constructor(
     private neTypeService: NetypeService,
@@ -103,6 +105,7 @@ export class NetypeComponent implements OnInit {
             message: 'NE Type "' + neType.name + '" is added successfully!'
           };
           this.submitComplete = true;
+          this.resetSelectAll();
         },
         err => {
           this.status = {
@@ -146,27 +149,90 @@ export class NetypeComponent implements OnInit {
   deleteNeType(id: string): void {
     this.deleting = true;
     this.submitComplete = false;
-    this.delNeType = this.getNeTypeById(id);
+    this.delNeTypes = new Array(this.getNeTypeById(id));
   }
 
-  submitDelete(): void {
-    this.neTypeService.delete(this.delNeType.id).subscribe(
+  submitDeletes(): void {
+    const neTypeIds: string[] = new Array();
+    this.delNeTypes.forEach(neType => {
+      neTypeIds.push(neType.id);
+    });
+
+    let namestring = '';
+    this.neTypeService.deleteAll(neTypeIds).subscribe(
       data => {
-        this.neTypes = this.neTypes.filter(obj => obj.id !== this.delNeType.id);
+        this.delNeTypes.forEach(type => {
+          const index = this.neTypes.findIndex(obj => obj.id === type.id);
+          this.neTypes.splice(index, 1);
+          namestring = namestring.concat(' [ ' + type.name + ' ] ');
+        })
         this.status = {
           success: true,
-          message: 'NE Type "' + this.delNeType.name + '" is deleted successfully!'
+          message: 'NE Type' + namestring + 'is deleted successfully!'
         };
         this.submitComplete = true;
+        this.resetSelectAll();
       },
       err => {
         this.status = {
           success: true,
-          message: 'NE Type "' + this.delNeType.name + '" is deleted failed!'
+          message: 'NE Type' + namestring + 'is deleted failed!'
         };
         this.submitComplete = true;
       }
     );
+  }
+
+  deleteNeTypes(): void {
+    this.deleting = true;
+    this.submitComplete = false;
+    const tempNeTypes: NeType[] = new Array();
+    this.neTypes.forEach(neType => {
+      if (neType.select) {
+        tempNeTypes.push(neType);
+      }
+    });
+    this.delNeTypes = tempNeTypes;
+  }
+
+  selectAll(): void {
+    this.isSelectAll = !this.isSelectAll;
+    if (this.isSelectAll) {
+      this.neTypes.forEach(neType => {
+        neType.select = true;
+      });
+    } else {
+      this.neTypes.forEach(neType => {
+        neType.select = false;
+      });
+    }
+    this.setDeleteDisabled();
+  }
+
+  setDeleteDisabled(): void {
+    let isAnySelect = false;
+    this.neTypes.forEach(neType => {
+      if (neType.select) {
+        isAnySelect = true;
+      }
+    });
+    this.deleteDisabled = !isAnySelect;
+  }
+
+  select(neType: NeType): void {
+    neType.select = !neType.select;
+    this.resetSelectAll();
+    this.setDeleteDisabled();
+  }
+
+  resetSelectAll(): void {
+    let isAllSelected = true;
+    this.neTypes.forEach(type => {
+      if (!type.select) {
+        isAllSelected = false;
+      }
+    });
+    this.isSelectAll = isAllSelected;
   }
 
   get aName() { return this.addForm.get('name'); }

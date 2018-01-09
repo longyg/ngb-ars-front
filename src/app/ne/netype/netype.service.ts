@@ -25,6 +25,10 @@ export class NetypeService {
     return this.http.delete<Object>('/api/netype/' + id);
   }
 
+  deleteAll(ids: string[]): Observable<Object> {
+    return this.http.post<Object>('/api/netype/delete', ids);
+  }
+
   private handleError(error: any): Promise<any> {
     console.error('Some error occured', error);
     return Promise.reject(error.message || error);
