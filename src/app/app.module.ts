@@ -16,6 +16,7 @@ import { NetypeService } from './ne/netype/netype.service';
 import { StatusComponent } from './common/status/status.component';
 import { PaginationComponent } from './common/pagination/pagination.component';
 import { IfoComponent } from './ne/ifo/ifo.component';
+import {IfoService} from './ne/ifo/ifo.service';
 
 @NgModule({
   declarations: [
@@ -37,7 +38,7 @@ import { IfoComponent } from './ne/ifo/ifo.component';
     ReactiveFormsModule
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
-  providers: [ArsService, NetypeService],
+  providers: [ArsService, NetypeService, IfoService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

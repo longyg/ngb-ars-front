@@ -15,8 +15,8 @@ export class NetypeComponent implements OnInit {
   editing = false;
   addForm: FormGroup;
   editForm: FormGroup;
-  submitComplete: boolean;
-  isLoading = false;
+  submitting = true;
+  isLoading = true;
   status: Status;
   editId: string;
   delNeTypes: NeType[];
@@ -51,7 +51,6 @@ export class NetypeComponent implements OnInit {
 
   showAddForm(): void {
     this.editing = false;
-    this.submitComplete = false;
     this.addForm.reset();
     this.addForm = this.fb.group({
       name: ['', Validators.required],
@@ -64,7 +63,6 @@ export class NetypeComponent implements OnInit {
   showEditForm(id: string): void {
     this.editId = id;
     this.editing = true;
-    this.submitComplete = false;
     this.editForm.reset();
 
     const type = this.getNeTypeById(id);
@@ -90,6 +88,7 @@ export class NetypeComponent implements OnInit {
   }
 
   onAddSubmit(): void {
+    this.submitting = true;
     const neType = new NeType();
     neType.name = this.aName.value;
     neType.presentation = this.aPresentation.value;
@@ -104,7 +103,7 @@ export class NetypeComponent implements OnInit {
             success: true,
             message: 'NE Type "' + neType.name + '" is added successfully!'
           };
-          this.submitComplete = true;
+          this.submitting = false;
           this.resetSelectAll();
         },
         err => {
@@ -112,12 +111,13 @@ export class NetypeComponent implements OnInit {
             success: false,
             message: 'NE Type "' + neType.name + '" is added failed!'
           };
-          this.submitComplete = true;
+          this.submitting = false;
         }
       );
   }
 
   onEditSubmit(): void {
+    this.submitting = true;
     const neType = new NeType();
     neType.id = this.editId;
     neType.name = this.eName.value;
@@ -134,25 +134,25 @@ export class NetypeComponent implements OnInit {
             success: true,
             message: 'NE Type "' + neType.name + '" is updated successfully!'
           };
-          this.submitComplete = true;
+          this.submitting = false;
         },
         err => {
           this.status = {
             success: false,
             message: 'NE Type "' + neType.name + '" is updated failed!'
           };
-          this.submitComplete = true;
+          this.submitting = false;
         }
       );
   }
 
   deleteNeType(id: string): void {
     this.deleting = true;
-    this.submitComplete = false;
     this.delNeTypes = new Array(this.getNeTypeById(id));
   }
 
   submitDeletes(): void {
+    this.submitting = true;
     const neTypeIds: string[] = new Array();
     this.delNeTypes.forEach(neType => {
       neTypeIds.push(neType.id);
@@ -170,7 +170,7 @@ export class NetypeComponent implements OnInit {
           success: true,
           message: 'NE Type' + namestring + 'is deleted successfully!'
         };
-        this.submitComplete = true;
+        this.submitting = false;
         this.resetSelectAll();
       },
       err => {
@@ -178,14 +178,13 @@ export class NetypeComponent implements OnInit {
           success: true,
           message: 'NE Type' + namestring + 'is deleted failed!'
         };
-        this.submitComplete = true;
+        this.submitting = false;
       }
     );
   }
 
   deleteNeTypes(): void {
     this.deleting = true;
-    this.submitComplete = false;
     const tempNeTypes: NeType[] = new Array();
     this.neTypes.forEach(neType => {
       if (neType.select) {
@@ -239,6 +238,7 @@ export class NetypeComponent implements OnInit {
   get aPresentation() { return this.addForm.get('presentation'); }
   get aAgentClass() { return this.addForm.get('agentClass'); }
   get aDescription() { return this.addForm.get('description'); }
+
   get eName() { return this.editForm.get('name'); }
   get ePresentation() { return this.editForm.get('presentation'); }
   get eAgentClass() { return this.editForm.get('agentClass'); }

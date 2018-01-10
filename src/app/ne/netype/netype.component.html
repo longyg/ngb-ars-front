@@ -43,7 +43,7 @@
 </div>
 
 <!--Modal: Ne Type Form-->
-<div mdbModal style="overflow: auto;" #formModal="mdb-modal" class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+<div mdbModal [config]="{ignoreBackdropClick: true}" style="overflow: auto;" #formModal="mdb-modal" class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog cascading-modal" role="document">
 
     <!--Add Form-->
@@ -162,7 +162,7 @@
           </div>
 
           <div class="text-center mt-1-half">
-            <button type="submit" class="btn btn-success mb-2 waves-light" mdbRippleRadius><i class="fa fa-save ml-1"></i>  Save</button>
+            <button type="submit" [disabled]="editForm.invalid" class="btn btn-success mb-2 waves-light" mdbRippleRadius><i class="fa fa-save ml-1"></i>  Save</button>
           </div>
         </form>
       </div>
@@ -172,7 +172,7 @@
 
 <!-- status modal -->
 <div mdbModal [config]="{ignoreBackdropClick: true}" #statusModal="mdb-modal" class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-  <div *ngIf="!submitComplete">
+  <div *ngIf="submitting">
     <div class="modal-dialog modal-notify modal-info" role="document">
       <div class="modal-content">
         <div class="modal-header">
@@ -187,7 +187,7 @@
     </div>
   </div>
 
-  <div *ngIf="submitComplete">
+  <div *ngIf="!submitting">
     <div *ngIf="status.success" class="modal-dialog modal-notify modal-success" role="document">
       <div class="modal-content">
         <div class="modal-header">
