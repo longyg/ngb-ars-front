@@ -1,19 +1,19 @@
 import { Component, OnInit } from '@angular/core';
-import {InterfaceObject} from './ifo';
-import {IfoService} from './ifo.service';
-import 'rxjs/add/operator/finally';
+import {NeRelease} from './ne-release';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Status} from '../../common/status/status';
+import {NeReleaseService} from './ne-release.service';
+import {NetypeService} from '../netype/netype.service';
 
 @Component({
-  selector: 'app-ifo',
-  templateUrl: './ifo.component.html',
-  styleUrls: ['./ifo.component.scss']
+  selector: 'app-ne-release',
+  templateUrl: './ne-release.component.html',
+  styleUrls: ['./ne-release.component.scss']
 })
-export class IfoComponent implements OnInit {
-  entities: InterfaceObject[];
+export class NeReleaseComponent implements OnInit {
+  entities: NeRelease[];
   isLoading = true;
-  delEntities: InterfaceObject[];
+  delEntities: NeRelease[];
   editing = false;
   addForm: FormGroup;
   editForm: FormGroup;
@@ -25,7 +25,8 @@ export class IfoComponent implements OnInit {
   deleteDisabled = true;
 
   constructor(
-    private dataService: IfoService,
+    private dataService: NeReleaseService,
+    private neTypeService: NetypeService,
     private fb: FormBuilder
   ) { }
 
@@ -42,9 +43,9 @@ export class IfoComponent implements OnInit {
 
   createEmptyForm(): FormGroup {
     return this.fb.group({
-      name: '',
-      presentation: '',
-      description: ''
+      type: '',
+      version: '',
+      remarks: ''
     });
   }
 
@@ -52,9 +53,9 @@ export class IfoComponent implements OnInit {
     this.editing = false;
     this.addForm.reset();
     this.addForm = this.fb.group({
-      name: ['', Validators.required],
-      presentation: ['', Validators.required],
-      description: ['']
+      type: ['', Validators.required],
+      version: ['', Validators.required],
+      remarks: ['']
     });
   }
 
@@ -67,15 +68,15 @@ export class IfoComponent implements OnInit {
 
     if (null != entity) {
       this.editForm = this.fb.group({
-        name: [entity.name, Validators.required],
-        presentation: [entity.presentation, Validators.required],
-        description: [entity.description]
+        type: [entity.type, Validators.required],
+        version: [entity.version, Validators.required],
+        remarks: [entity.remarks]
       });
     }
   }
 
-  getEntityById(id: string): InterfaceObject {
-    let entity: InterfaceObject;
+  getEntityById(id: string): NeRelease {
+    let entity: NeRelease;
     for (const tmp of this.entities) {
       if (tmp.id === id) {
         entity = tmp;
@@ -86,10 +87,10 @@ export class IfoComponent implements OnInit {
 
   onAddSubmit(): void {
     this.submitting = true;
-    const entity = new InterfaceObject();
-    entity.name = this.aName.value;
-    entity.presentation = this.aPresentation.value;
-    entity.description = this.aDescription.value;
+    const entity = new NeRelease();
+    entity.type = this.aType.value;
+    entity.version = this.aVersion.value;
+    entity.remarks = this.aRemarks.value;
 
     this.dataService.add(entity)
       .subscribe(
@@ -97,7 +98,7 @@ export class IfoComponent implements OnInit {
           this.entities.push(savedEntity);
           this.status = {
             success: true,
-            message: 'Interface Object "' + entity.name + '" is added successfully!'
+            message: 'NE Release "' + entity.type + '-' + entity.version + '" is added successfully!'
           };
           this.submitting = false;
           this.resetSelectAll();
@@ -105,7 +106,7 @@ export class IfoComponent implements OnInit {
         err => {
           this.status = {
             success: false,
-            message: 'Interface Object "' + entity.name + '" is added failed!'
+            message: 'NE Release "' + entity.type + '-' + entity.version + '" is added failed!'
           };
           this.submitting = false;
         }
@@ -114,27 +115,27 @@ export class IfoComponent implements OnInit {
 
   onEditSubmit(): void {
     this.submitting = true;
-    const entity = new InterfaceObject();
+    const entity = new NeRelease();
     entity.id = this.editId;
-    entity.name = this.eName.value;
-    entity.presentation = this.ePresentation.value;
-    entity.description = this.eDescription.value;
+    entity.type = this.eType.value;
+    entity.version = this.eVersion.value;
+    entity.remarks = this.eRemarks.value;
 
     this.dataService.update(entity)
       .subscribe(
-        (updatedEntity: InterfaceObject) => {
+        (updatedEntity: NeRelease) => {
           const existingEntity = this.entities.find(obj => obj.id === updatedEntity.id);
           Object.assign(existingEntity, updatedEntity);
           this.status = {
             success: true,
-            message: 'Interface Object "' + entity.name + '" is updated successfully!'
+            message: 'NE Release "' + entity.type + '-' + entity.version + '" is updated successfully!'
           };
           this.submitting = false;
         },
         err => {
           this.status = {
             success: false,
-            message: 'Interface Object "' + entity.name + '" is updated failed!'
+            message: 'NE Release "' + entity.type + '-' + entity.version + '" is updated failed!'
           };
           this.submitting = false;
         }
@@ -159,11 +160,11 @@ export class IfoComponent implements OnInit {
         this.delEntities.forEach(entity => {
           const index = this.entities.findIndex(obj => obj.id === entity.id);
           this.entities.splice(index, 1);
-          namestring = namestring.concat(' [ ' + entity.name + ' ] ');
+          namestring = namestring.concat(' [ ' + entity.type + '-' + entity.version + ' ] ');
         })
         this.status = {
           success: true,
-          message: 'Interface Object' + namestring + 'is deleted successfully!'
+          message: 'NE Release' + namestring + 'is deleted successfully!'
         };
         this.submitting = false;
         this.resetSelectAll();
@@ -171,7 +172,7 @@ export class IfoComponent implements OnInit {
       err => {
         this.status = {
           success: true,
-          message: 'Interface Object' + namestring + 'is deleted failed!'
+          message: 'NE Release' + namestring + 'is deleted failed!'
         };
         this.submitting = false;
       }
@@ -180,7 +181,7 @@ export class IfoComponent implements OnInit {
 
   deleteEntities(): void {
     this.deleting = true;
-    const tempEntities: InterfaceObject[] = new Array();
+    const tempEntities: NeRelease[] = new Array();
     this.entities.forEach(entity => {
       if (entity.select) {
         tempEntities.push(entity);
@@ -213,7 +214,7 @@ export class IfoComponent implements OnInit {
     this.deleteDisabled = !isAnySelect;
   }
 
-  select(entity: InterfaceObject): void {
+  select(entity: NeRelease): void {
     entity.select = !entity.select;
     this.resetSelectAll();
     this.setDeleteDisabled();
@@ -229,11 +230,11 @@ export class IfoComponent implements OnInit {
     this.isSelectAll = isAllSelected;
   }
 
-  get aName() { return this.addForm.get('name'); }
-  get aPresentation() { return this.addForm.get('presentation'); }
-  get aDescription() { return this.addForm.get('description'); }
+  get aType() { return this.addForm.get('type'); }
+  get aVersion() { return this.addForm.get('version'); }
+  get aRemarks() { return this.addForm.get('remarks'); }
 
-  get eName() { return this.editForm.get('name'); }
-  get ePresentation() { return this.editForm.get('presentation'); }
-  get eDescription() { return this.editForm.get('description'); }
+  get eType() { return this.editForm.get('type'); }
+  get eVersion() { return this.editForm.get('version'); }
+  get eRemarks() { return this.editForm.get('remarks'); }
 }

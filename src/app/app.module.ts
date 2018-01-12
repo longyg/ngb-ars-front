@@ -17,6 +17,8 @@ import { StatusComponent } from './common/status/status.component';
 import { PaginationComponent } from './common/pagination/pagination.component';
 import { IfoComponent } from './ne/ifo/ifo.component';
 import {IfoService} from './ne/ifo/ifo.service';
+import { NeReleaseComponent } from './ne/ne-release/ne-release.component';
+import {NeReleaseService} from './ne/ne-release/ne-release.service';
 
 @NgModule({
   declarations: [
@@ -27,7 +29,8 @@ import {IfoService} from './ne/ifo/ifo.service';
     NetypeComponent,
     StatusComponent,
     PaginationComponent,
-    IfoComponent
+    IfoComponent,
+    NeReleaseComponent
   ],
   imports: [
     BrowserModule,
@@ -38,7 +41,7 @@ import {IfoService} from './ne/ifo/ifo.service';
     ReactiveFormsModule
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
-  providers: [ArsService, NetypeService, IfoService],
+  providers: [ArsService, NetypeService, IfoService, NeReleaseService],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
