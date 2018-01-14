@@ -1,20 +1,18 @@
 import { Component, OnInit } from '@angular/core';
-import {NeRelease} from './ne-release';
+import {ParentObject} from './parent-object';
 import {FormBuilder, FormGroup, Validators} from '@angular/forms';
 import {Status} from '../../common/status/status';
-import {NeReleaseService} from './ne-release.service';
-import {NetypeService} from '../netype/netype.service';
-import {NeType} from '../netype/netype';
+import {PtoService} from './parent-object.service';
 
 @Component({
-  selector: 'app-ne-release',
-  templateUrl: './ne-release.component.html',
-  styleUrls: ['./ne-release.component.scss']
+  selector: 'app-parent-object',
+  templateUrl: './parent-object.component.html',
+  styleUrls: ['./parent-object.component.scss']
 })
-export class NeReleaseComponent implements OnInit {
-  entities: NeRelease[];
+export class ParentObjectComponent implements OnInit {
+  entities: ParentObject[];
   isLoading = true;
-  delEntities: NeRelease[];
+  delEntities: ParentObject[];
   editing = false;
   addForm: FormGroup;
   editForm: FormGroup;
@@ -24,17 +22,14 @@ export class NeReleaseComponent implements OnInit {
   deleting = false;
   isSelectAll = false;
   deleteDisabled = true;
-  neTypes: NeType[];
 
   constructor(
-    private dataService: NeReleaseService,
-    private neTypeService: NetypeService,
+    private dataService: PtoService,
     private fb: FormBuilder
   ) { }
 
   ngOnInit() {
     this.getEntities();
-    this.getNeTypes();
     this.addForm = this.createEmptyForm();
     this.editForm = this.createEmptyForm();
   }
@@ -44,15 +39,12 @@ export class NeReleaseComponent implements OnInit {
     this.dataService.getAll().finally(() => this.isLoading = false).subscribe(data => this.entities = data);
   }
 
-  getNeTypes() {
-    this.neTypeService.getAll().subscribe(list => this.neTypes = list);
-  }
-
   createEmptyForm(): FormGroup {
     return this.fb.group({
-      type: '',
-      version: '',
-      remarks: ''
+      name: '',
+      presentation: '',
+      nameInOMeS: '',
+      isTransient: false
     });
   }
 
@@ -60,9 +52,10 @@ export class NeReleaseComponent implements OnInit {
     this.editing = false;
     this.addForm.reset();
     this.addForm = this.fb.group({
-      type: ['', Validators.required],
-      version: ['', Validators.required],
-      remarks: ['']
+      name: ['', Validators.required],
+      presentation: ['', Validators.required],
+      nameInOMeS: [''],
+      isTransient: [false]
     });
   }
 
@@ -75,15 +68,16 @@ export class NeReleaseComponent implements OnInit {
 
     if (null != entity) {
       this.editForm = this.fb.group({
-        type: [entity.type, Validators.required],
-        version: [entity.version, Validators.required],
-        remarks: [entity.remarks]
+        name: [entity.name, Validators.required],
+        presentation: [entity.presentation, Validators.required],
+        nameInOMeS: [entity.nameInOMeS],
+        isTransient: [entity.isTransient === 'Yes' ? true : false]
       });
     }
   }
 
-  getEntityById(id: string): NeRelease {
-    let entity: NeRelease;
+  getEntityById(id: string): ParentObject {
+    let entity: ParentObject;
     for (const tmp of this.entities) {
       if (tmp.id === id) {
         entity = tmp;
@@ -94,10 +88,11 @@ export class NeReleaseComponent implements OnInit {
 
   onAddSubmit(): void {
     this.submitting = true;
-    const entity = new NeRelease();
-    entity.type = this.aType.value;
-    entity.version = this.aVersion.value;
-    entity.remarks = this.aRemarks.value;
+    const entity = new ParentObject();
+    entity.name = this.aName.value;
+    entity.presentation = this.aPresentation.value;
+    entity.nameInOMeS = this.aNameInOMeS.value;
+    entity.isTransient = this.aIsTransient.value === true ? 'Yes' : 'No';
 
     this.dataService.add(entity)
       .subscribe(
@@ -105,7 +100,7 @@ export class NeReleaseComponent implements OnInit {
           this.entities.push(savedEntity);
           this.status = {
             success: true,
-            message: 'NE Release "' + entity.type + '-' + entity.version + '" is added successfully!'
+            message: 'Parent Object "' + entity.name + '" is added successfully!'
           };
           this.submitting = false;
           this.resetSelectAll();
@@ -113,7 +108,7 @@ export class NeReleaseComponent implements OnInit {
         err => {
           this.status = {
             success: false,
-            message: 'NE Release "' + entity.type + '-' + entity.version + '" is added failed!'
+            message: 'Parent Object "' + entity.name + '" is added failed!'
           };
           this.submitting = false;
         }
@@ -122,27 +117,28 @@ export class NeReleaseComponent implements OnInit {
 
   onEditSubmit(): void {
     this.submitting = true;
-    const entity = new NeRelease();
+    const entity = new ParentObject();
     entity.id = this.editId;
-    entity.type = this.eType.value;
-    entity.version = this.eVersion.value;
-    entity.remarks = this.eRemarks.value;
+    entity.name = this.eName.value;
+    entity.presentation = this.ePresentation.value;
+    entity.nameInOMeS = this.eNameInOMeS.value;
+    entity.isTransient = this.eIsTransient.value === true ? 'Yes' : 'No';
 
     this.dataService.update(entity)
       .subscribe(
-        (updatedEntity: NeRelease) => {
+        (updatedEntity: ParentObject) => {
           const existingEntity = this.entities.find(obj => obj.id === updatedEntity.id);
           Object.assign(existingEntity, updatedEntity);
           this.status = {
             success: true,
-            message: 'NE Release "' + entity.type + '-' + entity.version + '" is updated successfully!'
+            message: 'Parent Object "' + entity.name + '" is updated successfully!'
           };
           this.submitting = false;
         },
         err => {
           this.status = {
             success: false,
-            message: 'NE Release "' + entity.type + '-' + entity.version + '" is updated failed!'
+            message: 'Parent Object "' + entity.name + '" is updated failed!'
           };
           this.submitting = false;
         }
@@ -167,11 +163,11 @@ export class NeReleaseComponent implements OnInit {
         this.delEntities.forEach(entity => {
           const index = this.entities.findIndex(obj => obj.id === entity.id);
           this.entities.splice(index, 1);
-          namestring = namestring.concat(' [ ' + entity.type + '-' + entity.version + ' ] ');
+          namestring = namestring.concat(' [ ' + entity.name + ' ] ');
         })
         this.status = {
           success: true,
-          message: 'NE Release' + namestring + 'is deleted successfully!'
+          message: 'Parent Object' + namestring + 'is deleted successfully!'
         };
         this.submitting = false;
         this.resetSelectAll();
@@ -179,7 +175,7 @@ export class NeReleaseComponent implements OnInit {
       err => {
         this.status = {
           success: true,
-          message: 'NE Release' + namestring + 'is deleted failed!'
+          message: 'Parent Object' + namestring + 'is deleted failed!'
         };
         this.submitting = false;
       }
@@ -188,7 +184,7 @@ export class NeReleaseComponent implements OnInit {
 
   deleteEntities(): void {
     this.deleting = true;
-    const tempEntities: NeRelease[] = new Array();
+    const tempEntities: ParentObject[] = new Array();
     this.entities.forEach(entity => {
       if (entity.select) {
         tempEntities.push(entity);
@@ -221,7 +217,7 @@ export class NeReleaseComponent implements OnInit {
     this.deleteDisabled = !isAnySelect;
   }
 
-  select(entity: NeRelease): void {
+  select(entity: ParentObject): void {
     entity.select = !entity.select;
     this.resetSelectAll();
     this.setDeleteDisabled();
@@ -237,11 +233,13 @@ export class NeReleaseComponent implements OnInit {
     this.isSelectAll = isAllSelected;
   }
 
-  get aType() { return this.addForm.get('type'); }
-  get aVersion() { return this.addForm.get('version'); }
-  get aRemarks() { return this.addForm.get('remarks'); }
+  get aName() { return this.addForm.get('name'); }
+  get aPresentation() { return this.addForm.get('presentation'); }
+  get aNameInOMeS() { return this.addForm.get('nameInOMeS'); }
+  get aIsTransient() { return this.addForm.get('isTransient'); }
 
-  get eType() { return this.editForm.get('type'); }
-  get eVersion() { return this.editForm.get('version'); }
-  get eRemarks() { return this.editForm.get('remarks'); }
+  get eName() { return this.editForm.get('name'); }
+  get ePresentation() { return this.editForm.get('presentation'); }
+  get eNameInOMeS() { return this.editForm.get('nameInOMeS'); }
+  get eIsTransient() { return this.editForm.get('isTransient'); }
 }

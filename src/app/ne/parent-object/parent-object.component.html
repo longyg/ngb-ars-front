@@ -1,6 +1,6 @@
 <div class="card">
   <div class="card-body">
-    <h2 class="card-title">NE Release</h2>
+    <h2 class="card-title">Parent Object</h2>
 
     <table class="table table-bordered table-sm">
       <thead>
@@ -8,9 +8,10 @@
         <th style="text-align: center">
           <input type="checkbox" [checked]="isSelectAll" (change)="selectAll()">
         </th>
-        <th>NE Type</th>
-        <th>NE Version</th>
-        <th>Remarks</th>
+        <th>Name</th>
+        <th>Presentation</th>
+        <th>Name In OMeS</th>
+        <th>Is Transient</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -22,9 +23,10 @@
         <td style="text-align: center;">
           <input type="checkbox" [checked]="entity.select" (change)="select(entity)">
         </td>
-        <td>{{entity.type}}</td>
-        <td>{{entity.version}}</td>
-        <td>{{entity.remarks}}</td>
+        <td>{{entity.name}}</td>
+        <td>{{entity.presentation}}</td>
+        <td>{{entity.nameInOMeS}}</td>
+        <td>{{entity.isTransient}}</td>
         <td>
           <a class="indigo-text waves-button" (click)="showEditForm(entity.id); formModal.show()" ><i class="fa fa-edit"></i> Edit</a>
           <a class="red-text waves-button" (click)="deleteEntity(entity.id);confirmModal.show()" ><i class="fa fa-minus-circle"></i> Delete</a>
@@ -40,7 +42,7 @@
   </div>
 </div>
 
-<!-- Form Modal-->
+<!--Modal: Interface Object Form-->
 <div mdbModal [config]="{ignoreBackdropClick: true}" style="overflow: auto;" #formModal="mdb-modal" class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
   <div class="modal-dialog cascading-modal" role="document">
 
@@ -48,7 +50,7 @@
     <div *ngIf="!editing" class="modal-content">
       <!--Header-->
       <div class="modal-header light-blue darken-3 white-text">
-        <h4 class="title"><i class="fa fa-plus-circle"></i> Add NE Release</h4>
+        <h4 class="title"><i class="fa fa-plus-circle"></i> Add Parent Object</h4>
         <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="formModal.hide()">
           <span aria-hidden="true">×</span>
         </button>
@@ -56,36 +58,40 @@
       <!--Body-->
       <div class="modal-body mb-0">
         <form [formGroup]="addForm" (ngSubmit)="onAddSubmit();formModal.hide();statusModal.show()" novalidate>
-          <div class="form-group">
+          <div class="md-form form-sm">
             <i class="fa fa-tags prefix"></i>
-            <label for="form1">NE Type</label>
-            <select id="form1" class="form-control" formControlName="type">
-              <option *ngFor="let neType of neTypes" value="{{neType.name}}">{{neType.name}}</option>
-            </select>
-            <div *ngIf="aType.invalid && (aType.dirty || aType.touched)"
+            <input mdbActive type="text" id="form1" class="form-control" formControlName="name">
+            <label for="form1">Name</label>
+            <div *ngIf="aName.invalid && (aName.dirty || aName.touched)"
                  class="alert alert-danger">
-              <div *ngIf="aType.errors.required">
-                NE Type is required.
+              <div *ngIf="aName.errors.required">
+                Name is required.
               </div>
             </div>
           </div>
 
           <div class="md-form form-sm">
             <i class="fa fa-television prefix"></i>
-            <input mdbActive type="text" id="form2" class="form-control" formControlName="version">
-            <label for="form2">NE Version</label>
-            <div *ngIf="aVersion.invalid && (aVersion.dirty || aVersion.touched)"
+            <input mdbActive type="text" id="form2" class="form-control" formControlName="presentation">
+            <label for="form2">Presentation</label>
+            <div *ngIf="aPresentation.invalid && (aPresentation.dirty || aPresentation.touched)"
                  class="alert alert-danger">
-              <div *ngIf="aVersion.errors.required">
-                NE Version is required.
+              <div *ngIf="aPresentation.errors.required">
+                Presentation is required.
               </div>
             </div>
           </div>
 
           <div class="md-form form-sm">
+            <i class="fa fa-television prefix"></i>
+            <input mdbActive type="text" id="form3" class="form-control" formControlName="nameInOMeS">
+            <label for="form3">Name In OMeS</label>
+          </div>
+
+          <div class="md-form form-sm">
             <i class="fa fa-pencil prefix"></i>
-            <textarea mdbActive type="text" id="form3" formControlName="remarks" class="md-textarea mb-0"></textarea>
-            <label for="form3">Remarks</label>
+            <input type="checkbox" id="form4" class="form-control" formControlName="isTransient">
+            <label for="form4">Is Transient</label>
           </div>
 
           <div class="text-center mt-1-half">
@@ -99,7 +105,7 @@
     <div *ngIf="editing" class="modal-content">
       <!--Header-->
       <div class="modal-header light-blue darken-3 white-text">
-        <h4 class="title"><i class="fa fa-edit"></i> Edit NE Release</h4>
+        <h4 class="title"><i class="fa fa-edit"></i> Edit Parent Object</h4>
         <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="formModal.hide()">
           <span aria-hidden="true">×</span>
         </button>
@@ -107,36 +113,40 @@
       <!--Body-->
       <div class="modal-body mb-0">
         <form [formGroup]="editForm" (ngSubmit)="onEditSubmit();formModal.hide();statusModal.show()" novalidate>
-          <div class="form-group">
+          <div class="md-form form-sm">
             <i class="fa fa-tags prefix"></i>
-            <label for="form11">NE Type</label>
-            <select id="form11" class="form-control" formControlName="type">
-              <option *ngFor="let neType of neTypes" value="{{neType.name}}">{{neType.name}}</option>
-            </select>
-            <div *ngIf="eType.invalid && (eType.dirty || eType.touched)"
+            <input mdbActive type="text" id="form11" class="form-control" formControlName="name">
+            <label for="form11">Name</label>
+            <div *ngIf="eName.invalid && (eName.dirty || eName.touched)"
                  class="alert alert-danger">
-              <div *ngIf="eType.errors.required">
-                NE Type is required.
+              <div *ngIf="eName.errors.required">
+                Name is required.
               </div>
             </div>
           </div>
 
           <div class="md-form form-sm">
             <i class="fa fa-television prefix"></i>
-            <input mdbActive type="text" id="form12" class="form-control" formControlName="version">
-            <label for="form12">NE Version</label>
-            <div *ngIf="eVersion.invalid && (eVersion.dirty || eVersion.touched)"
+            <input mdbActive type="text" id="form12" class="form-control" formControlName="presentation">
+            <label for="form12">Presentation</label>
+            <div *ngIf="ePresentation.invalid && (ePresentation.dirty || ePresentation.touched)"
                  class="alert alert-danger">
-              <div *ngIf="eVersion.errors.required">
-                NE Version is required.
+              <div *ngIf="ePresentation.errors.required">
+                Presentation is required.
               </div>
             </div>
           </div>
 
           <div class="md-form form-sm">
+            <i class="fa fa-television prefix"></i>
+            <input mdbActive type="text" id="form13" class="form-control" formControlName="nameInOMeS">
+            <label for="form13">Name In OMeS</label>
+          </div>
+
+          <div class="md-form form-sm">
             <i class="fa fa-pencil prefix"></i>
-            <textarea mdbActive type="text" id="form13" formControlName="remarks" class="md-textarea mb-0"></textarea>
-            <label for="form13">Remarks</label>
+            <label for="form14">Is Transient</label>
+            <input type="checkbox" id="form14" class="form-control" formControlName="isTransient">
           </div>
 
           <div class="text-center mt-1-half">
@@ -221,7 +231,7 @@
       <div class="modal-body">
         <div class="text-center">
           <i class="fa fa-warning fa-4x mb-3 animated rotateIn"></i>
-          <p>Do you want to delete NE release: <span *ngFor="let entity of delEntities">[{{entity.type}}-{{entity.version}}] </span>?</p>
+          <p>Do you want to delete Parent Object: <span *ngFor="let entity of delEntities">[{{entity.name}}] </span>?</p>
         </div>
       </div>
       <div class="modal-footer justify-content-center">

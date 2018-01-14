@@ -19,6 +19,10 @@ import { IfoComponent } from './ne/ifo/ifo.component';
 import {IfoService} from './ne/ifo/ifo.service';
 import { NeReleaseComponent } from './ne/ne-release/ne-release.component';
 import {NeReleaseService} from './ne/ne-release/ne-release.service';
+import { ParentObjectComponent } from './ne/parent-object/parent-object.component';
+import {PtoService} from './ne/parent-object/parent-object.service';
+import { AlarmObjectComponent } from './ne/alarm-object/alarm-object.component';
+import {AlarmObjectService} from './ne/alarm-object/alarm-object.service';
 
 @NgModule({
   declarations: [
@@ -30,7 +34,9 @@ import {NeReleaseService} from './ne/ne-release/ne-release.service';
     StatusComponent,
     PaginationComponent,
     IfoComponent,
-    NeReleaseComponent
+    NeReleaseComponent,
+    ParentObjectComponent,
+    AlarmObjectComponent
   ],
   imports: [
     BrowserModule,
@@ -41,7 +47,14 @@ import {NeReleaseService} from './ne/ne-release/ne-release.service';
     ReactiveFormsModule
   ],
   schemas: [ NO_ERRORS_SCHEMA ],
-  providers: [ArsService, NetypeService, IfoService, NeReleaseService],
+  providers: [
+    ArsService,
+    NetypeService,
+    IfoService,
+    NeReleaseService,
+    PtoService,
+    AlarmObjectService
+  ],
   bootstrap: [AppComponent]
 })
 export class AppModule { }
