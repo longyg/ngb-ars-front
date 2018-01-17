@@ -7,6 +7,8 @@ import {IfoComponent} from './ne/ifo/ifo.component';
 import {NeReleaseComponent} from './ne/ne-release/ne-release.component';
 import {ParentObjectComponent} from './ne/parent-object/parent-object.component';
 import {AlarmObjectComponent} from './ne/alarm-object/alarm-object.component';
+import {AdaptationComponent} from './ne/adaptation/adaptation.component';
+import {ObjectLoadComponent} from './ne/object-load/object-load.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -16,7 +18,9 @@ const routes: Routes = [
   {path: 'ifo', component: IfoComponent},
   {path: 'nerel', component: NeReleaseComponent},
   {path: 'pto', component: ParentObjectComponent},
-  {path: 'ao', component: AlarmObjectComponent}
+  {path: 'ao', component: AlarmObjectComponent},
+  {path: 'adap', component: AdaptationComponent},
+  {path: 'ol', component: ObjectLoadComponent}
 ];
 
 @NgModule({

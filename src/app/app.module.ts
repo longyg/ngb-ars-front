@@ -23,6 +23,10 @@ import { ParentObjectComponent } from './ne/parent-object/parent-object.componen
 import {PtoService} from './ne/parent-object/parent-object.service';
 import { AlarmObjectComponent } from './ne/alarm-object/alarm-object.component';
 import {AlarmObjectService} from './ne/alarm-object/alarm-object.service';
+import { AdaptationComponent } from './ne/adaptation/adaptation.component';
+import {AdaptationService} from './ne/adaptation/adaptation.service';
+import { ObjectLoadComponent } from './ne/object-load/object-load.component';
+import {ObjectLoadService} from './ne/object-load/object-load.service';
 
 @NgModule({
   declarations: [
@@ -36,7 +40,9 @@ import {AlarmObjectService} from './ne/alarm-object/alarm-object.service';
     IfoComponent,
     NeReleaseComponent,
     ParentObjectComponent,
-    AlarmObjectComponent
+    AlarmObjectComponent,
+    AdaptationComponent,
+    ObjectLoadComponent
   ],
   imports: [
     BrowserModule,
@@ -53,7 +59,9 @@ import {AlarmObjectService} from './ne/alarm-object/alarm-object.service';
     IfoService,
     NeReleaseService,
     PtoService,
-    AlarmObjectService
+    AlarmObjectService,
+    AdaptationService,
+    ObjectLoadService
   ],
   bootstrap: [AppComponent]
 })

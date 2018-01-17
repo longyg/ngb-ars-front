@@ -1,0 +1,267 @@
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title">Object Load</h2>
+
+    <table class="table table-bordered table-sm">
+      <thead>
+      <tr>
+        <th style="text-align: center">
+          <input type="checkbox" [checked]="isSelectAll" (change)="selectAll()">
+        </th>
+        <th>Object Class</th>
+        <th>Max Number</th>
+        <th>Avg Number</th>
+        <th>Related Object Class</th>
+        <th>Actions</th>
+      </tr>
+      </thead>
+      <tbody>
+      <tr *ngIf="isLoading">
+        <td colspan="6"><i>Loading ... </i></td>
+      </tr>
+      <tr *ngFor="let entity of entities">
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="entity.select" (change)="select(entity)">
+        </td>
+        <td>{{entity.objectClass}}</td>
+        <td>{{entity.max}}</td>
+        <td>{{entity.avg}}</td>
+        <td>{{entity.relatedObjectClass}}</td>
+        <td>
+          <a class="indigo-text waves-button" (click)="showEditForm(entity.id); formModal.show()" ><i class="fa fa-edit"></i> Edit</a>
+          <a class="red-text waves-button" (click)="deleteEntity(entity.id);confirmModal.show()" ><i class="fa fa-minus-circle"></i> Delete</a>
+        </td>
+      </tr>
+      </tbody>
+    </table>
+
+    <app-pagination></app-pagination>
+
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="showAddForm();formModal.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteEntities();confirmModal.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
+  </div>
+</div>
+
+<!--Modal: Interface Object Form-->
+<div mdbModal [config]="{ignoreBackdropClick: true}" style="overflow: auto;" #formModal="mdb-modal" class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog cascading-modal" role="document">
+
+    <!--Add Form-->
+    <div *ngIf="!editing" class="modal-content">
+      <!--Header-->
+      <div class="modal-header light-blue darken-3 white-text">
+        <h4 class="title"><i class="fa fa-plus-circle"></i> Add Object Load</h4>
+        <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="formModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body mb-0">
+        <form [formGroup]="addForm" (ngSubmit)="onAddSubmit();formModal.hide();statusModal.show()" novalidate>
+          <div class="md-form form-sm">
+            <i class="fa fa-tags prefix"></i>
+            <input mdbActive type="text" id="form1" class="form-control" formControlName="objectClass">
+            <label for="form1">Object Class</label>
+            <div *ngIf="aObjectClass.invalid && (aObjectClass.dirty || aObjectClass.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="aObjectClass.errors.required">
+                Object Class is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-television prefix"></i>
+            <input mdbActive type="text" id="form2" class="form-control" formControlName="max">
+            <label for="form2">Maximum Number</label>
+            <div *ngIf="aMax.invalid && (aMax.dirty || aMax.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="aMax.errors.required">
+                Maximum Number is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-television prefix"></i>
+            <input mdbActive type="text" id="form3" class="form-control" formControlName="avg">
+            <label for="form3">Average Number</label>
+            <div *ngIf="aAvg.invalid && (aAvg.dirty || aAvg.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="aAvg.errors.required">
+                Average Number is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-tags prefix"></i>
+            <input mdbActive type="text" id="form4" class="form-control" formControlName="relatedObjectClass">
+            <label for="form4">Related Object Class</label>
+            <div *ngIf="aRelatedObjectClass.invalid && (aRelatedObjectClass.dirty || aRelatedObjectClass.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="aRelatedObjectClass.errors.required">
+                Related Object Class is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-1-half">
+            <button type="submit" [disabled]="addForm.invalid" class="btn btn-success mb-2 waves-light" mdbRippleRadius><i class="fa fa-save ml-1"></i>  Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- Edit Form -->
+    <div *ngIf="editing" class="modal-content">
+      <!--Header-->
+      <div class="modal-header light-blue darken-3 white-text">
+        <h4 class="title"><i class="fa fa-edit"></i> Edit Parent Object</h4>
+        <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="formModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body mb-0">
+        <form [formGroup]="editForm" (ngSubmit)="onEditSubmit();formModal.hide();statusModal.show()" novalidate>
+          <div class="md-form form-sm">
+            <i class="fa fa-tags prefix"></i>
+            <input mdbActive type="text" id="form11" class="form-control" formControlName="objectClass">
+            <label for="form11">Object Class</label>
+            <div *ngIf="eObjectClass.invalid && (eObjectClass.dirty || eObjectClass.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="eObjectClass.errors.required">
+                Object Class is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-television prefix"></i>
+            <input mdbActive type="text" id="form12" class="form-control" formControlName="max">
+            <label for="form12">Maximum Number</label>
+            <div *ngIf="eMax.invalid && (eMax.dirty || eMax.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="eMax.errors.required">
+                Maximum Number is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-television prefix"></i>
+            <input mdbActive type="text" id="form13" class="form-control" formControlName="avg">
+            <label for="form13">Average Number</label>
+            <div *ngIf="eAvg.invalid && (eAvg.dirty || eAvg.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="eAvg.errors.required">
+                Average Number is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="md-form form-sm">
+            <i class="fa fa-tags prefix"></i>
+            <input mdbActive type="text" id="form14" class="form-control" formControlName="relatedObjectClass">
+            <label for="form14">Related Object Class</label>
+            <div *ngIf="eRelatedObjectClass.invalid && (eRelatedObjectClass.dirty || eRelatedObjectClass.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="eRelatedObjectClass.errors.required">
+                Related Object Class is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="text-center mt-1-half">
+            <button type="submit" [disabled]="editForm.invalid" class="btn btn-success mb-2 waves-light" mdbRippleRadius><i class="fa fa-save ml-1"></i>  Save</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- status modal -->
+<div mdbModal [config]="{ignoreBackdropClick: true}" #statusModal="mdb-modal" class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div *ngIf="submitting">
+    <div class="modal-dialog modal-notify modal-info" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="heading lead">Submitting ...</p>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <i class="fa fa-save fa-4x mb-3 animated rotateIn"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!submitting">
+    <div *ngIf="status.success" class="modal-dialog modal-notify modal-success" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="heading lead">Success</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="statusModal.hide()">
+            <span aria-hidden="true" class="white-text">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+            <p>{{status.message}}</p>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a type="button" class="btn btn-outline-secondary-modal" data-dismiss="modal" (click)="statusModal.hide()" mdbRippleRadius>Close</a>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!status.success" class="modal-dialog modal-notify modal-danger" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="heading lead">Error</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="statusModal.hide()">
+            <span aria-hidden="true" class="white-text">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <i class="fa fa-close fa-4x mb-3 animated rotateIn"></i>
+            <p class="red-text">{{status.message}}</p>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a type="button" class="btn btn-outline-secondary-modal" data-dismiss="modal" (click)="statusModal.hide()" mdbRippleRadius>Close</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirmation modal -->
+<div mdbModal [config]="{ignoreBackdropClick: true}" #confirmModal="mdb-modal" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div *ngIf="deleting" class="modal-dialog modal-notify modal-warning" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="heading lead">Confirmation</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="confirmModal.hide()">
+          <span aria-hidden="true" class="white-text">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <i class="fa fa-warning fa-4x mb-3 animated rotateIn"></i>
+          <p>Do you want to delete Object Load: <span *ngFor="let entity of delEntities">[{{entity.relatedObjectClass}}->{{entity.objectClass}}] </span>?</p>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <a type="button" class="btn btn-secondary waves-light" data-dismiss="modal" (click)="confirmModal.hide()" mdbRippleRadius>Cancel</a>
+        <a type="button" class="btn btn-primary waves-light" (click)="submitDeletes();confirmModal.hide();statusModal.show()" mdbRippleRadius>Confirm</a>
+      </div>
+    </div>
+  </div>
+</div>
