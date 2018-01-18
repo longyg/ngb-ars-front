@@ -9,6 +9,7 @@ import {ParentObjectComponent} from './ne/parent-object/parent-object.component'
 import {AlarmObjectComponent} from './ne/alarm-object/alarm-object.component';
 import {AdaptationComponent} from './ne/adaptation/adaptation.component';
 import {ObjectLoadComponent} from './ne/object-load/object-load.component';
+import {ReleaseConfigComponent} from './ne/release-config/release-config.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -20,7 +21,8 @@ const routes: Routes = [
   {path: 'pto', component: ParentObjectComponent},
   {path: 'ao', component: AlarmObjectComponent},
   {path: 'adap', component: AdaptationComponent},
-  {path: 'ol', component: ObjectLoadComponent}
+  {path: 'ol', component: ObjectLoadComponent},
+  {path: 'relconfig', component: ReleaseConfigComponent}
 ];
 
 @NgModule({

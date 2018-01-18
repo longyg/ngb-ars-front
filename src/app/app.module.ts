@@ -27,6 +27,9 @@ import { AdaptationComponent } from './ne/adaptation/adaptation.component';
 import {AdaptationService} from './ne/adaptation/adaptation.service';
 import { ObjectLoadComponent } from './ne/object-load/object-load.component';
 import {ObjectLoadService} from './ne/object-load/object-load.service';
+import { ReleaseConfigComponent } from './ne/release-config/release-config.component';
+import {ReleaseConfigService} from './ne/release-config/release-config.service';
+import { AddReleaseConfigComponent } from './ne/release-config/add-release-config/add-release-config.component';
 
 @NgModule({
   declarations: [
@@ -42,7 +45,9 @@ import {ObjectLoadService} from './ne/object-load/object-load.service';
     ParentObjectComponent,
     AlarmObjectComponent,
     AdaptationComponent,
-    ObjectLoadComponent
+    ObjectLoadComponent,
+    ReleaseConfigComponent,
+    AddReleaseConfigComponent
   ],
   imports: [
     BrowserModule,
@@ -61,7 +66,8 @@ import {ObjectLoadService} from './ne/object-load/object-load.service';
     PtoService,
     AlarmObjectService,
     AdaptationService,
-    ObjectLoadService
+    ObjectLoadService,
+    ReleaseConfigService
   ],
   bootstrap: [AppComponent]
 })

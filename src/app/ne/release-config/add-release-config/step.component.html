@@ -1,0 +1,6 @@
+<div>
+  <li *ngFor="let step of steps">
+    <span *ngIf="step.step == selectedStep" style="color: blue">{{step.title}}</span>
+    <span *ngIf="step.step != selectedStep">{{step.title}}</span>
+  </li>
+</div>
