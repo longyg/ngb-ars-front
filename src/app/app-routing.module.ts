@@ -10,6 +10,7 @@ import {AlarmObjectComponent} from './ne/alarm-object/alarm-object.component';
 import {AdaptationComponent} from './ne/adaptation/adaptation.component';
 import {ObjectLoadComponent} from './ne/object-load/object-load.component';
 import {ReleaseConfigComponent} from './ne/release-config/release-config.component';
+import {AddReleaseConfigComponent} from './ne/release-config/add-release-config/add-release-config.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -22,7 +23,8 @@ const routes: Routes = [
   {path: 'ao', component: AlarmObjectComponent},
   {path: 'adap', component: AdaptationComponent},
   {path: 'ol', component: ObjectLoadComponent},
-  {path: 'relconfig', component: ReleaseConfigComponent}
+  {path: 'relconfig', component: ReleaseConfigComponent},
+  {path: 'add-rel-config', component: AddReleaseConfigComponent}
 ];
 
 @NgModule({

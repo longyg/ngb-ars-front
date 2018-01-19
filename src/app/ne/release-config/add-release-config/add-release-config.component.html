@@ -1,1 +1,10 @@
-<app-step [step]="currentStep"></app-step>
+Create Release Config
+<div>
+  <li *ngFor="let step of steps">
+    <span *ngIf="step.step == selectedStep" style="color: blue">{{step.step}}: {{step.title}}</span>
+    <span *ngIf="step.step != selectedStep">{{step.step}}: {{step.title}}</span>
+  </li>
+</div>
+<button (click)="goLastStep()">Last Step</button>
+<button (click)="goNextStep()">Next Step</button>
+
