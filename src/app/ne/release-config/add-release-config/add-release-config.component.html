@@ -1,10 +1,218 @@
-Create Release Config
-<div>
-  <li *ngFor="let step of steps">
-    <span *ngIf="step.step == selectedStep" style="color: blue">{{step.step}}: {{step.title}}</span>
-    <span *ngIf="step.step != selectedStep">{{step.step}}: {{step.title}}</span>
-  </li>
-</div>
-<button (click)="goLastStep()">Last Step</button>
-<button (click)="goNextStep()">Next Step</button>
+<div class="card">
+  <div class="card-body">
+    <h2 class="card-title">Create Release Configuration</h2>
 
+    <div class="container">
+      <div class="row">
+        <div class="col-sm-4 stepper-border">
+          <div class="stepper-items">
+            <div class="stepper-item" *ngFor="let step of steps">
+              <div class="step"
+                [class.selected-step]="step.step == selectedStep"
+                [class.not-selected-step]="step.step != selectedStep">{{step.step}}
+              </div>
+              <div class="step-title"
+                [class.selected-step-title]="step.step == selectedStep"
+                [class.not-selected-step-title]="step.step != selectedStep">{{step.title}}
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-sm-8">
+          <div class="stepper-content">
+            <div class="card">
+              <div class="card-body">
+
+                <!-- Select NE Type and NE Release -->
+                <div *ngIf="selectedStep == 1">
+                  <h4 class="card-title">Select NE Type and Release</h4>
+                  <form [formGroup]="neTypeRelForm" novalidate>
+                    <div class="form-group">
+                      <i class="fa fa-tags prefix"></i>
+                      <label for="form1">NE Type</label>
+                      <select id="form1" class="form-control" formControlName="neType" (change)="selectNeType()">
+                        <option *ngFor="let neType of neTypes" value="{{neType.name}}">{{neType.name}}</option>
+                      </select>
+                      <div *ngIf="type.invalid && (type.dirty || type.touched)"
+                           class="alert alert-danger">
+                        <div *ngIf="type.errors.required">
+                          NE Type is required.
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="form-group">
+                      <i class="fa fa-tags prefix"></i>
+                      <label for="form2">NE Release</label>
+                      <select id="form2" class="form-control" formControlName="neRelease">
+                        <option *ngFor="let neRelease of neReleases" value="{{neRelease.version}}">{{neRelease.version}}</option>
+                      </select>
+                      <div *ngIf="neRel.invalid && (neRel.dirty || neRel.touched)"
+                           class="alert alert-danger">
+                        <div *ngIf="neRel.errors.required">
+                          NE Type is required.
+                        </div>
+                      </div>
+                    </div>
+                  </form>
+                </div>
+
+                <!-- Select Interface Objects -->
+                <div *ngIf="selectedStep == 2">
+                  <h4 class="card-title">Select Interface Objects</h4>
+                  <form [formGroup]="interfaceForm" novalidate>
+                    <div class="form-group">
+                      <i class="fa fa-tags prefix"></i>
+                      <label for="form11">Interface Object</label>
+                      <select id="form11" class="form-control" formControlName="ifo" (change)="selectInterface()">
+                        <option *ngFor="let ifo of ifos" value="{{ifo.name}}">{{ifo.name}}</option>
+                      </select>
+                    </div>
+                  </form>
+                  <div *ngIf="selectedIfos.length > 0">
+                    <h5>Selected Interface Objects:</h5>
+                    <div class="selected-ifo" *ngFor="let ifo of selectedIfos">
+                      <a class="red-text" (click)="unselectInterface(ifo)" title="Remove"><i class="fa fa-minus-circle"> </i></a>
+                      {{ifo.name}}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Select Adaptations -->
+                <div *ngIf="selectedStep == 3">
+                  <h4 class="card-title">Select Adaptations</h4>
+                  <form [formGroup]="adaptationForm" novalidate>
+                    <div class="form-group">
+                      <i class="fa fa-tags prefix"></i>
+                      <label for="form21">Adaptation ID</label>
+                      <select id="form21" class="form-control" formControlName="adaptationId" (change)="selectAdaptationId()">
+                        <option *ngFor="let adapId of adapIds" value="{{adapId}}">{{adapId}}</option>
+                      </select>
+                    </div>
+
+                    <div class="form-group">
+                      <i class="fa fa-tags prefix"></i>
+                      <label for="form22">Adaptation Release</label>
+                      <select id="form22" class="form-control" formControlName="adaptationRelease">
+                        <option *ngFor="let adapRel of adapRels" value="{{adapRel}}">{{adapRel}}</option>
+                      </select>
+                    </div>
+                  </form>
+
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="selectAdaptation()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
+
+                  <div *ngIf="selectedAdaps.length > 0" style="margin-top: 20px">
+                    <h5>Selected Adaptations:</h5>
+                    <div class="selected-ifo" *ngFor="let adap of selectedAdaps">
+                      <a class="red-text" (click)="unselectAdaptation(adap)" title="Remove"><i class="fa fa-minus-circle"> </i></a>
+                      {{adap.adaptationId}}-{{adap.adaptationRelease}} <span class="gray-text">({{adap.sourcePath}})</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Select Alarm Objects -->
+                <div *ngIf="selectedStep == 4">
+                  <h4 class="card-title">Select Alarm Objects</h4>
+                  <form [formGroup]="alarmForm" novalidate>
+                    <div class="form-group">
+                      <i class="fa fa-tags prefix"></i>
+                      <label for="form31">Alarm Object</label>
+                      <select id="form31" class="form-control" formControlName="ao" (change)="selectAlarmObject()">
+                        <option *ngFor="let ao of aos" value="{{ao.name}}">{{ao.name}}</option>
+                      </select>
+                    </div>
+                  </form>
+                  <div *ngIf="selectedAos.length > 0">
+                    <h5>Selected Alarm Objects:</h5>
+                    <div class="selected-ifo" *ngFor="let ao of selectedAos">
+                      <a class="red-text" (click)="unselectAlarmObject(ao)" title="Remove"><i class="fa fa-minus-circle"> </i></a>
+                      {{ao.name}}
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Select Object Loads -->
+                <div *ngIf="selectedStep == 5">
+                  <h4 class="card-title">Select Object Loads</h4>
+                  <form [formGroup]="olForm" novalidate>
+                    <div class="form-group">
+                      <i class="fa fa-tags prefix"></i>
+                      <label for="form41">Object Load</label>
+                      <select id="form41" class="form-control" formControlName="ol" (change)="selectObjectLoad()">
+                        <option *ngFor="let ol of ols" value="{{ol.id}}">{{ol.relatedObjectClass}} -> {{ol.objectClass}} (Max: {{ol.max}}, Avg: {{ol.avg}})</option>
+                      </select>
+                    </div>
+                  </form>
+                  <div *ngIf="selectedOls.length > 0">
+                    <h5>Selected Object Loads:</h5>
+                    <div class="selected-ifo" *ngFor="let ol of selectedOls">
+                      <a class="red-text" (click)="unselectObjectLoad(ol)" title="Remove"><i class="fa fa-minus-circle"> </i></a>
+                      {{ol.relatedObjectClass}} -> {{ol.objectClass}} <span class="gray-text">(Max: {{ol.max}}, Avg: {{ol.avg}})</span>
+                    </div>
+                  </div>
+                </div>
+
+                <!-- Add Parent Objects -->
+                <div *ngIf="selectedStep == 6">
+                  <h4 class="card-title">Add Parent Objects</h4>
+                  <form [formGroup]="poForm" novalidate>
+                    <div class="form-group">
+                      <i class="fa fa-tags prefix"></i>
+                      <label for="form51">Adaptation ID</label>
+                      <select id="form51" class="form-control" formControlName="adaptationId">
+                        <option *ngFor="let adapId of adapIds" value="{{adapId}}">{{adapId}}</option>
+                      </select>
+                    </div>
+
+                    <div class="md-form form-sm">
+                      <i class="fa fa-television prefix"></i>
+                      <input mdbActive type="text" id="form52" class="form-control" formControlName="po">
+                      <label for="form52">Parent Hierarchy</label>
+                    </div>
+                  </form>
+
+                  <button type="button" class="btn btn-sm btn-outline-primary" (click)="addParentObject()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
+
+                  <div *ngIf="pos.length > 0" style="margin-top: 20px">
+                    <h5>Added Parent Objects:</h5>
+                    <table class="table table-bordered table-sm">
+                      <thead>
+                      <tr>
+                        <th>Adaptation ID</th>
+                        <th>Parent Hierarchy</th>
+                        <th style="text-align: center;">Action</th>
+                      </tr>
+                      </thead>
+                      <tbody>
+                      <tr *ngFor="let po of pos">
+                        <td>{{po.adaptationId}}</td>
+                        <td>{{po.parentHierarchy}}</td>
+                        <td style="text-align: center;">
+                          <a class="red-text" (click)="removeParentObject(po)" title="Remove"><i class="fa fa-minus-circle"> </i></a>
+                        </td>
+                      </tr>
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+      <div class="row stepper-actions">
+        <div class="col-sm-8">
+        </div>
+        <div class="col-sm-4">
+          <button *ngIf="selectedStep != 1" class="btn btn-sm btn-outline-primary" (click)="goLastStep()">Last Step</button>
+          <button *ngIf="selectedStep != steps.length" class="btn btn-sm btn-outline-success" (click)="goNextStep()">Next Step</button>
+          <button *ngIf="selectedStep == steps.length" class="btn btn-sm btn-primary" (click)="save()">Save</button>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

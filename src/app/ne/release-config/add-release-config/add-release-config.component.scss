@@ -1,0 +1,63 @@
+.stepper-border {
+  border-right: 2px solid #828282;
+}
+.stepper-items {
+  padding: 20px;
+}
+
+.stepper-item {
+  margin: 10px;
+  padding: 10px;
+}
+
+.step {
+  float: left;
+  width: 40px;
+  height: 40px;
+  border-radius:40px;
+  line-height: 38px;
+  text-align: center;
+  margin: 10px;
+}
+
+.selected-step {
+  color: white;
+  background: #415dff;
+}
+
+.not-selected-step {
+  color: white;
+  background: gray;
+}
+
+.step-title {
+  float: left;
+  width: 180px;
+  height: 40px;
+  line-heigh: 40px;
+  margin: 10px;
+}
+
+.selected-step-title {
+  color: #415dff;
+}
+
+.not-selected-step-title {
+  color: gray;
+}
+
+.stepper-content {
+  padding: 20px;
+}
+
+.stepper-actions {
+  margin: 20px;
+}
+
+.selected-ifo {
+  margin: 10px;
+}
+
+.gray-text {
+  color: gray;
+}
