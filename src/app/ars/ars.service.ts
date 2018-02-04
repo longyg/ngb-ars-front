@@ -8,8 +8,16 @@ export class ArsService {
 
   constructor(private http: HttpClient) {}
 
-  list(): Observable<ARS[]> {
+  getAll(): Observable<ARS[]> {
     return this.http.get<ARS[]>('/api/ars');
+  }
+
+  deleteAll(ids: string[]): Observable<Object> {
+    return this.http.post<Object>('/api/ars/delete', ids);
+  }
+
+  generate(ars: ARS): Observable<ARS> {
+    return this.http.post<ARS>('/api/ars/generate', ars);
   }
 }
 

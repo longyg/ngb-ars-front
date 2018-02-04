@@ -12,7 +12,9 @@ import {AlarmObject} from '../../alarm-object/alarm-object';
 import {AlarmObjectService} from '../../alarm-object/alarm-object.service';
 import {ObjectLoad} from '../../object-load/object-load';
 import {ObjectLoadService} from '../../object-load/object-load.service';
-import {ParentConfig} from './ParentConfig';
+import {NeSize, ParentHierarchy, ReleaseConfig} from '../release-config';
+import {ReleaseConfigService} from '../release-config.service';
+import {Status} from '../../../common/status/status';
 
 @Component({
   selector: 'app-add-release-config',
@@ -20,6 +22,9 @@ import {ParentConfig} from './ParentConfig';
   styleUrls: ['./add-release-config.component.scss']
 })
 export class AddReleaseConfigComponent implements OnInit {
+  submitting = true;
+  status: Status;
+
   selectedStep = 1;
   neTypes: NeType[] = [];
   allNeReleases: NeRelease[] = [];
@@ -40,7 +45,7 @@ export class AddReleaseConfigComponent implements OnInit {
   ols: ObjectLoad[] = [];
   selectedOls: ObjectLoad[] = [];
 
-  pos: ParentConfig[] = [];
+  pos: ParentHierarchy[] = [];
 
   neTypeRelForm: FormGroup;
   interfaceForm: FormGroup;
@@ -48,6 +53,7 @@ export class AddReleaseConfigComponent implements OnInit {
   alarmForm: FormGroup;
   olForm: FormGroup;
   poForm: FormGroup;
+  neSizeForm: FormGroup;
 
   constructor(
     private neTypeService: NetypeService,
@@ -56,6 +62,7 @@ export class AddReleaseConfigComponent implements OnInit {
     private adapService: AdaptationService,
     private aoService: AlarmObjectService,
     private olService: ObjectLoadService,
+    private relConfigService: ReleaseConfigService,
     private fb: FormBuilder
   ) {}
 
@@ -65,7 +72,8 @@ export class AddReleaseConfigComponent implements OnInit {
     {step: 3, title: 'Select Adaptations'},
     {step: 4, title: 'Select Alarm Objects'},
     {step: 5, title: 'Select Object Loads'},
-    {step: 6, title: 'Add Parent Objects'}
+    {step: 6, title: 'Add Parent Objects'},
+    {step: 7, title: 'Set NE Size'}
   ];
 
   ngOnInit() {
@@ -82,6 +90,7 @@ export class AddReleaseConfigComponent implements OnInit {
     this.initAlarmForm();
     this.initOlForm();
     this.initPoForm();
+    this.initNeSizeForm();
   }
 
   initNeTypeRelForm(): void {
@@ -119,7 +128,14 @@ export class AddReleaseConfigComponent implements OnInit {
   initPoForm(): void {
     this.poForm = this.fb.group({
       adaptationId: ['', Validators.required],
-      po: ['', Validators.required]
+      hierarchy: ['', Validators.required]
+    });
+  }
+
+  initNeSizeForm(): void {
+    this.neSizeForm = this.fb.group({
+      maxNePerNetwork: ['', Validators.required],
+      avgNePerNetwork: ['', Validators.required]
     });
   }
 
@@ -242,7 +258,7 @@ export class AddReleaseConfigComponent implements OnInit {
 
   addParentObject(): void {
     let adapId = this.pAdapId.value;
-    let parentHierarchy = this.parentHierarchy.value;
+    let hierarchy = this.hierarchy.value;
 
     let isAdded = false;
     this.pos.forEach(po => {
@@ -251,14 +267,14 @@ export class AddReleaseConfigComponent implements OnInit {
       }
     });
     if (!isAdded) {
-      let po = new ParentConfig();
+      let po = new ParentHierarchy();
       po.adaptationId = adapId;
-      po.parentHierarchy = parentHierarchy;
+      po.hierarchy = hierarchy;
       this.pos.push(po);
     }
   }
 
-  removeParentObject(po: ParentConfig): void {
+  removeParentObject(po: ParentHierarchy): void {
     const index = this.pos.findIndex(obj => obj.adaptationId == po.adaptationId);
     this.pos.splice(index, 1);
   }
@@ -321,7 +337,57 @@ export class AddReleaseConfigComponent implements OnInit {
   }
 
   save(): void {
+    this.submitting = true;
+    let relConfig = new ReleaseConfig();
+    relConfig.neType = this.type.value;
+    relConfig.neVersion = this.neRel.value;
 
+    let interfaces: string[] = [];
+    this.selectedIfos.forEach(ifo => {
+      interfaces.push(ifo.id);
+    });
+    relConfig.interfaces = interfaces;
+
+    let adaptations: string[] = [];
+    this.selectedAdaps.forEach(adap => {
+      adaptations.push(adap.id);
+    });
+    relConfig.adaptations = adaptations;
+
+    let alarmObjects: string[] = [];
+    this.selectedAos.forEach(ao => {
+      alarmObjects.push(ao.id);
+    });
+    relConfig.alarmObjs = alarmObjects;
+
+    let objectLoads: string[] = [];
+    this.selectedOls.forEach(ol => {
+      objectLoads.push(ol.id);
+    });
+    relConfig.objectLoads = objectLoads;
+
+    relConfig.parentHierarchies = this.pos;
+
+    let neSize = new NeSize();
+    neSize.maxNePerNetwork = this.maxNePerNetwork.value;
+    neSize.avgNePerNetwork = this.avgNePerNetwork.value;
+    relConfig.neSize = neSize;
+
+    this.relConfigService.add(relConfig).subscribe(
+      savedEntity => {
+        this.status = {
+          success: true,
+          message: 'Release Configuration is saved successfully!'
+        };
+        this.submitting = false;
+      },
+      err => {
+        this.status = {
+          success: false,
+          message: 'Release Configuration is saved failed!'
+        };
+        this.submitting = false;
+      });
   }
 
   get type() {return this.neTypeRelForm.get('neType')}
@@ -337,5 +403,8 @@ export class AddReleaseConfigComponent implements OnInit {
   get ol() {return this.olForm.get('ol')}
 
   get pAdapId() {return this.poForm.get('adaptationId')}
-  get parentHierarchy() {return this.poForm.get('po')}
+  get hierarchy() {return this.poForm.get('hierarchy')}
+
+  get maxNePerNetwork() {return this.neSizeForm.get('maxNePerNetwork')}
+  get avgNePerNetwork() {return this.neSizeForm.get('avgNePerNetwork')}
 }

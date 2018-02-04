@@ -11,6 +11,10 @@ export class AlarmObjectService {
     return this.http.get<AlarmObject[]>('/api/ao');
   }
 
+  get(id: string): Observable<AlarmObject> {
+    return this.http.get<AlarmObject>('/api/ao/' + id);
+  }
+
   update(entity: AlarmObject): Observable<Object> {
     return this.http.put<Object>('/api/ao/' + entity.id, entity);
   }

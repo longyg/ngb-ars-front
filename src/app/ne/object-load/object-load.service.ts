@@ -11,6 +11,10 @@ export class ObjectLoadService {
     return this.http.get<ObjectLoad[]>('/api/ol');
   }
 
+  get(id: string): Observable<ObjectLoad> {
+    return this.http.get<ObjectLoad>('/api/ol/' + id);
+  }
+
   update(entity: ObjectLoad): Observable<Object> {
     return this.http.put<Object>('/api/ol/' + entity.id, entity);
   }

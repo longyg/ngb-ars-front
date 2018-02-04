@@ -12,6 +12,10 @@
         <th>NE Version</th>
         <th>Interfaces</th>
         <th>Adaptations</th>
+        <th>Alarm Objects</th>
+        <th>Object Loads</th>
+        <th>Parent Hierarchies</th>
+        <th>NE Size</th>
         <th>Actions</th>
       </tr>
       </thead>
@@ -26,10 +30,140 @@
         <td>{{entity.neType}}</td>
         <td>{{entity.neVersion}}</td>
         <td>
-          <li *ngFor="let interface of entity.interfaces">{{interface}}</li>
+          <ng-template #ifoTemplate>
+            <table class="table table-bordered table-sm">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Presentation</th>
+                <th>Description</th>
+              </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let ifo of itfos">
+                  <td>{{ifo.name}}</td>
+                  <td>{{ifo.presentation}}</td>
+                  <td>{{ifo.description}}</td>
+                </tr>
+              </tbody>
+            </table>
+          </ng-template>
+          <a class="indigo-text waves-button" (onShown)="onInterfaceShown(entity)" triggers="mouseenter:mouseleave"
+             popoverTitle="Interface Objects" placement="right" [mdbPopover]="ifoTemplate">
+            Interfaces <i class="fa fa-angle-right"></i>
+          </a>
         </td>
         <td>
-          <li *ngFor="let adap of entity.adaptations">{{adap}}</li>
+          <ng-template #adapTemplate>
+            <table class="table table-bordered table-sm">
+              <thead>
+              <tr>
+                <th>ID</th>
+                <th>Release</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let adap of adaps">
+                <td>{{adap.adaptationId}}</td>
+                <td>{{adap.adaptationRelease}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </ng-template>
+          <a class="indigo-text waves-button" (onShown)="onAdaptationShown(entity)" triggers="mouseenter:mouseleave"
+             popoverTitle="Adaptations" placement="right" [mdbPopover]="adapTemplate">
+            Adaptations <i class="fa fa-angle-right"></i>
+          </a>
+        </td>
+        <td>
+          <ng-template #aoTemplate>
+            <table class="table table-bordered table-sm">
+              <thead>
+              <tr>
+                <th>Name</th>
+                <th>Presentation</th>
+                <th>Description</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let ao of aos">
+                <td>{{ao.name}}</td>
+                <td>{{ao.presentation}}</td>
+                <td>{{ao.description}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </ng-template>
+          <a class="indigo-text waves-button" (onShown)="onAlarmObjectShown(entity)" triggers="mouseenter:mouseleave"
+             popoverTitle="Alarm Objects" placement="right" [mdbPopover]="aoTemplate">
+            Alarm Objects <i class="fa fa-angle-right"></i>
+          </a>
+        </td>
+        <td>
+          <ng-template #olTemplate>
+            <table class="table table-bordered table-sm">
+              <thead>
+              <tr>
+                <th>Class</th>
+                <th>Related Class</th>
+                <th>Max</th>
+                <th>Avg</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let ol of ols">
+                <td>{{ol.objectClass}}</td>
+                <td>{{ol.relatedObjectClass}}</td>
+                <td>{{ol.max}}</td>
+                <td>{{ol.avg}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </ng-template>
+          <a class="indigo-text waves-button" (onShown)="onObjectLoadShown(entity)" triggers="mouseenter:mouseleave"
+             popoverTitle="Object Loads" placement="right" [mdbPopover]="olTemplate">
+            Object Loads <i class="fa fa-angle-right"></i>
+          </a>
+        </td>
+        <td>
+          <ng-template #poTemplate>
+            <table class="table table-bordered table-sm">
+              <thead>
+              <tr>
+                <th>Adaptation ID</th>
+                <th>Parent Hierarchy</th>
+              </tr>
+              </thead>
+              <tbody>
+              <tr *ngFor="let po of entity.parentHierarchies">
+                <td>{{po.adaptationId}}</td>
+                <td>{{po.hierarchy}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </ng-template>
+          <a class="indigo-text waves-button" triggers="mouseenter:mouseleave"
+             popoverTitle="Parent Hierarchies" placement="right" [mdbPopover]="poTemplate">
+            Parent Hierarchies <i class="fa fa-angle-right"></i>
+          </a>
+        </td>
+        <td>
+          <ng-template #neSizeTemplate>
+            <table class="table table-bordered table-sm">
+              <tbody>
+              <tr>
+                <td>Max NE in Network: {{entity.neSize.maxNePerNetwork}}</td>
+              </tr>
+              <tr>
+                <td>Average NE in Network: {{entity.neSize.avgNePerNetwork}}</td>
+              </tr>
+              </tbody>
+            </table>
+          </ng-template>
+          <a class="indigo-text waves-button" triggers="mouseenter:mouseleave"
+             popoverTitle="NE Size" placement="right" [mdbPopover]="neSizeTemplate">
+            NE Size <i class="fa fa-angle-right"></i>
+          </a>
         </td>
         <td>
           <a class="indigo-text waves-button" (click)="showEditForm(entity.id); formModal.show()" ><i class="fa fa-edit"></i> Edit</a>

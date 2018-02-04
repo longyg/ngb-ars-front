@@ -4,7 +4,7 @@ export class ReleaseConfig {
   neVersion: string;
   interfaces: string[];
   adaptations: string[];
-  alarmObjects: string[];
+  alarmObjs: string[];
   objectLoads: string[];
   parentHierarchies: ParentHierarchy[];
   neSize: NeSize;

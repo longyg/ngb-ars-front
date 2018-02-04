@@ -1,29 +1,201 @@
 <div class="card">
   <div class="card-body">
-    <h1 class="card-title">ARS</h1>
+    <h2 class="card-title">ARS</h2>
 
     <table class="table table-bordered table-sm">
       <thead>
-        <tr>
-          <th>NE Type</th>
-          <th>NE Version</th>
-          <th>ARS</th>
-        </tr>
+      <tr>
+        <th style="text-align: center">
+          <input type="checkbox" [checked]="isSelectAll" (change)="selectAll()">
+        </th>
+        <th>NE Type</th>
+        <th>NE Version</th>
+        <th>ARS</th>
+        <th>Actions</th>
+      </tr>
       </thead>
-      <tbody *ngIf="arss">
-        <tr *ngFor="let a of arss">
-          <td>{{a.neType}}</td>
-          <td>{{a.neVersion}}</td>
-          <td>
-            <button class="btn btn-primary btn-sm">{{a.objectModel}}</button>
-            <button class="btn btn-primary btn-sm">PM Data Load</button>
-            <button class="btn btn-primary btn-sm">Counter</button>
-            <button class="btn btn-primary btn-sm">Alarm</button>
-          </td>
-        </tr>
+      <tbody>
+      <tr *ngIf="isLoading">
+        <td colspan="6"><i>Loading ... </i></td>
+      </tr>
+      <tr *ngFor="let entity of entities">
+        <td style="text-align: center;">
+          <input type="checkbox" [checked]="entity.select" (change)="select(entity)">
+        </td>
+        <td>{{entity.neType}}</td>
+        <td>{{entity.neVersion}}</td>
+        <td>{{entity.userStory}} {{entity.objectModel}} {{entity.pmDataLoad}} {{entity.counter}} {{entity.alarm}}</td>
+        <td>
+          <a class="indigo-text waves-button" (click)="showEditForm(entity.id); formModal.show()" ><i class="fa fa-edit"></i> Edit</a>
+          <a class="red-text waves-button" (click)="deleteEntity(entity.id);confirmModal.show()" ><i class="fa fa-minus-circle"></i> Delete</a>
+        </td>
+      </tr>
       </tbody>
     </table>
 
+    <app-pagination></app-pagination>
+
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="showCreateArsForm();formModal.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
+    <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteEntities();confirmModal.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
   </div>
 </div>
 
+<!-- Form Modal-->
+<div mdbModal [config]="{ignoreBackdropClick: true}" style="overflow: auto;" #formModal="mdb-modal" class="modal fade" id="formModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog cascading-modal" role="document">
+
+    <!--ARS Generate Form-->
+    <div *ngIf="!editing" class="modal-content">
+      <!--Header-->
+      <div class="modal-header light-blue darken-3 white-text">
+        <h4 class="title"><i class="fa fa-plus-circle"></i> Generate ARS</h4>
+        <button type="button" class="close waves-effect waves-light" data-dismiss="modal" aria-label="Close" (click)="formModal.hide()">
+          <span aria-hidden="true">×</span>
+        </button>
+      </div>
+      <!--Body-->
+      <div class="modal-body mb-0">
+        <form [formGroup]="createArsForm" (ngSubmit)="generateARS();formModal.hide();statusModal.show()" novalidate>
+          <div class="form-group">
+            <i class="fa fa-tags prefix"></i>
+            <label for="form1">NE Type</label>
+            <select id="form1" class="form-control" formControlName="neType" (change)="selectNeType()">
+              <option *ngFor="let neType of neTypes" value="{{neType.name}}">{{neType.name}}</option>
+            </select>
+            <div *ngIf="neType.invalid && (neType.dirty || neType.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="neType.errors.required">
+                NE Type is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <i class="fa fa-tags prefix"></i>
+            <label for="form2">NE Release</label>
+            <select id="form2" class="form-control" formControlName="neRelease" (change)="selectNeRelease()">
+              <option *ngFor="let neRelease of neReleases" value="{{neRelease.version}}">{{neRelease.version}}</option>
+            </select>
+            <div *ngIf="neRelease.invalid && (neRelease.dirty || neRelease.touched)"
+                 class="alert alert-danger">
+              <div *ngIf="neRelease.errors.required">
+                NE Type is required.
+              </div>
+            </div>
+          </div>
+
+          <div class="form-group">
+            <i class="fa fa-tags prefix"></i>
+            <label for="form3">Last NE Release</label>
+            <select id="form3" class="form-control" formControlName="lastNeRelease" (change)="selectLastNeRelease()">
+              <option *ngFor="let neRelease of lastNeReleases" value="{{neRelease.version}}">{{neRelease.version}}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <i class="fa fa-tags prefix"></i>
+            <label for="form4">Older NE Releases</label>
+            <select id="form4" class="form-control" formControlName="olderNeRelease" (change)="selectOlderNeRelease()">
+              <option *ngFor="let neRelease of olderNeReleases" value="{{neRelease.version}}">{{neRelease.version}}</option>
+            </select>
+            <div *ngIf="selectedOlderNeReleases.length > 0">
+              <div class="selected-ifo" *ngFor="let neRel of selectedOlderNeReleases" style="margin-left: 20px">
+                <a class="red-text" (click)="unselectOlderNeRelease(neRel)" title="Remove"><i class="fa fa-minus-circle"> </i></a>
+                {{neRel.version}}
+              </div>
+            </div>
+          </div>
+
+
+          <div class="text-center mt-1-half">
+            <button type="submit" [disabled]="createArsForm.invalid" class="btn btn-success mb-2 waves-light" mdbRippleRadius><i class="fa fa-save ml-1"></i>  Generate</button>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- status modal -->
+<div mdbModal [config]="{ignoreBackdropClick: true}" #statusModal="mdb-modal" class="modal fade" id="statusModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div *ngIf="submitting">
+    <div class="modal-dialog modal-notify modal-info" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="heading lead">Generating ...</p>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <i class="fa fa-save fa-4x mb-3 animated rotateIn"></i>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div *ngIf="!submitting">
+    <div *ngIf="status.success" class="modal-dialog modal-notify modal-success" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="heading lead">Success</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="statusModal.hide()">
+            <span aria-hidden="true" class="white-text">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <i class="fa fa-check fa-4x mb-3 animated rotateIn"></i>
+            <p>{{status.message}}</p>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a type="button" class="btn btn-outline-secondary-modal" data-dismiss="modal" (click)="statusModal.hide()" mdbRippleRadius>Close</a>
+        </div>
+      </div>
+    </div>
+
+    <div *ngIf="!status.success" class="modal-dialog modal-notify modal-danger" role="document">
+      <div class="modal-content">
+        <div class="modal-header">
+          <p class="heading lead">Error</p>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="statusModal.hide()">
+            <span aria-hidden="true" class="white-text">×</span>
+          </button>
+        </div>
+        <div class="modal-body">
+          <div class="text-center">
+            <i class="fa fa-close fa-4x mb-3 animated rotateIn"></i>
+            <p class="red-text">{{status.message}}</p>
+          </div>
+        </div>
+        <div class="modal-footer justify-content-center">
+          <a type="button" class="btn btn-outline-secondary-modal" data-dismiss="modal" (click)="statusModal.hide()" mdbRippleRadius>Close</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- Delete confirmation modal -->
+<div mdbModal [config]="{ignoreBackdropClick: true}" #confirmModal="mdb-modal" class="modal fade" id="confirmModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div *ngIf="deleting" class="modal-dialog modal-notify modal-warning" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <p class="heading lead">Confirmation</p>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close" (click)="confirmModal.hide()">
+          <span aria-hidden="true" class="white-text">×</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="text-center">
+          <i class="fa fa-warning fa-4x mb-3 animated rotateIn"></i>
+          <p>Do you want to delete ARS of <span *ngFor="let entity of delEntities">[{{entity.neType}}-{{entity.neVersion}}] </span>?</p>
+        </div>
+      </div>
+      <div class="modal-footer justify-content-center">
+        <a type="button" class="btn btn-secondary waves-light" data-dismiss="modal" (click)="confirmModal.hide()" mdbRippleRadius>Cancel</a>
+        <a type="button" class="btn btn-primary waves-light" (click)="submitDeletes();confirmModal.hide();statusModal.show()" mdbRippleRadius>Confirm</a>
+      </div>
+    </div>
+  </div>
+</div>

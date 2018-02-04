@@ -11,6 +11,10 @@ export class AdaptationService {
     return this.http.get<Adaptation[]>('/api/adap');
   }
 
+  get(id: string): Observable<Adaptation> {
+    return this.http.get<Adaptation>('/api/adap/' + id);
+  }
+
   update(entity: Adaptation): Observable<Object> {
     return this.http.put<Object>('/api/adap/' + entity.id, entity);
   }

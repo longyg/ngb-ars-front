@@ -11,6 +11,14 @@ export class IfoService {
     return this.http.get<InterfaceObject[]>('/api/ifo');
   }
 
+  get(id: string): Observable<InterfaceObject> {
+    return this.http.get<InterfaceObject>('/api/ifo/' + id);
+  }
+
+  getList(ids: string[]): Observable<InterfaceObject[]> {
+    return this.http.post<InterfaceObject[]>('/api/ifo/list', ids);
+  }
+
   update(entity: InterfaceObject): Observable<Object> {
     return this.http.put<Object>('/api/ifo/' + entity.id, entity);
   }
