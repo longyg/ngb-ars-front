@@ -7,6 +7,7 @@ import {NeType} from '../ne/netype/netype';
 import {NetypeService} from '../ne/netype/netype.service';
 import {NeReleaseService} from '../ne/ne-release/ne-release.service';
 import {NeRelease} from '../ne/ne-release/ne-release';
+import {Router} from '@angular/router';
 
 @Component({
   selector: 'app-ars',
@@ -36,6 +37,7 @@ export class ArsComponent implements OnInit {
     private dataService: ArsService,
     private neTypeService: NetypeService,
     private neReleaseService: NeReleaseService,
+    private router: Router,
     private fb: FormBuilder
   ) { }
 
@@ -45,6 +47,10 @@ export class ArsComponent implements OnInit {
     this.getAllNeReleases();
 
     this.initCreateArsForm();
+  }
+
+  viewOm(id: string): void {
+    this.router.navigate(['/view-om', id]);
   }
 
   initCreateArsForm(): void {

@@ -24,7 +24,10 @@
         </td>
         <td>{{entity.neType}}</td>
         <td>{{entity.neVersion}}</td>
-        <td>{{entity.userStory}} {{entity.objectModel}} {{entity.pmDataLoad}} {{entity.counter}} {{entity.alarm}}</td>
+        <td>
+          <a *ngIf="entity.objectModel != ''" class="btn btn-sm btn-outline-primary" (click)="viewOm(entity.objectModel)">Create Release Config</a>
+          {{entity.userStory}} {{entity.objectModel}} {{entity.pmDataLoad}} {{entity.counter}} {{entity.alarm}}
+        </td>
         <td>
           <a class="indigo-text waves-button" (click)="showEditForm(entity.id); formModal.show()" ><i class="fa fa-edit"></i> Edit</a>
           <a class="red-text waves-button" (click)="deleteEntity(entity.id);confirmModal.show()" ><i class="fa fa-minus-circle"></i> Delete</a>

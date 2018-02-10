@@ -11,6 +11,7 @@ import {AdaptationComponent} from './ne/adaptation/adaptation.component';
 import {ObjectLoadComponent} from './ne/object-load/object-load.component';
 import {ReleaseConfigComponent} from './ne/release-config/release-config.component';
 import {AddReleaseConfigComponent} from './ne/release-config/add-release-config/add-release-config.component';
+import {ViewOmComponent} from './ars/view-om/view-om.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -24,7 +25,8 @@ const routes: Routes = [
   {path: 'adap', component: AdaptationComponent},
   {path: 'ol', component: ObjectLoadComponent},
   {path: 'relconfig', component: ReleaseConfigComponent},
-  {path: 'add-rel-config', component: AddReleaseConfigComponent}
+  {path: 'add-rel-config', component: AddReleaseConfigComponent},
+  {path: 'view-om/:id', component: ViewOmComponent}
 ];
 
 @NgModule({
