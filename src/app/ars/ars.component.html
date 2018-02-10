@@ -25,11 +25,14 @@
         <td>{{entity.neType}}</td>
         <td>{{entity.neVersion}}</td>
         <td>
-          <a *ngIf="entity.objectModel != ''" class="btn btn-sm btn-outline-primary" (click)="viewOm(entity.objectModel)">Create Release Config</a>
-          {{entity.userStory}} {{entity.objectModel}} {{entity.pmDataLoad}} {{entity.counter}} {{entity.alarm}}
+          <a *ngIf="entity.objectModel" class="indigo-text waves-button" (click)="viewOm(entity.objectModel)">
+            <i class="fa fa-tree"> </i>Object Model
+          </a>
+          <a *ngIf="entity.pmDataLoad" class="indigo-text waves-button" (click)="viewPm(entity.pmDataLoad)">
+            <i class="fa fa-dashboard"> </i>PM Data Load
+          </a>
         </td>
         <td>
-          <a class="indigo-text waves-button" (click)="showEditForm(entity.id); formModal.show()" ><i class="fa fa-edit"></i> Edit</a>
           <a class="red-text waves-button" (click)="deleteEntity(entity.id);confirmModal.show()" ><i class="fa fa-minus-circle"></i> Delete</a>
         </td>
       </tr>
@@ -38,7 +41,7 @@
 
     <app-pagination></app-pagination>
 
-    <button type="button" class="btn btn-sm btn-outline-primary" (click)="showCreateArsForm();formModal.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Add</button>
+    <button type="button" class="btn btn-sm btn-outline-primary" (click)="showCreateArsForm();formModal.show()" mdbRippleRadius><i class="fa fa-plus-circle"></i> Generate ARS</button>
     <button type="button" class="btn btn-sm btn-outline-danger" (click)="deleteEntities();confirmModal.show()" mdbRippleRadius><i class="fa fa-minus-circle"></i> Delete</button>
   </div>
 </div>
