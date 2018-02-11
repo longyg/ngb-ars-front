@@ -4,6 +4,7 @@ import { Observable } from 'rxjs/Observable';
 import {ARS} from './ars';
 import {ObjectModelSpec} from './view-om/om-spec';
 import {NeRelease} from '../ne/ne-release/ne-release';
+import {PmDataLoadSpec} from './view-pm/pm-spec';
 
 @Injectable()
 export class ArsService {
@@ -26,12 +27,8 @@ export class ArsService {
     return this.http.get<ObjectModelSpec>('/api/om/' + id);
   }
 
-  getAdaptationIdsOfOm(id: string): Observable<string[]> {
-    return this.http.get<string[]>('/api/om/adaptations/' + id);
-  }
-
-  getNeReleaseOfOm(id: string): Observable<NeRelease> {
-    return this.http.get<NeRelease>('/api/om/nerel/' + id);
+  getPmDataLoad(id: string): Observable<PmDataLoadSpec> {
+    return this.http.get<PmDataLoadSpec>('/api/pmdl/' + id);
   }
 }
 

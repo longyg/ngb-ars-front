@@ -31,6 +31,7 @@ import { ReleaseConfigComponent } from './ne/release-config/release-config.compo
 import {ReleaseConfigService} from './ne/release-config/release-config.service';
 import { AddReleaseConfigComponent } from './ne/release-config/add-release-config/add-release-config.component';
 import { ViewOmComponent } from './ars/view-om/view-om.component';
+import { ViewPmComponent } from './ars/view-pm/view-pm.component';
 
 @NgModule({
   declarations: [
@@ -49,7 +50,8 @@ import { ViewOmComponent } from './ars/view-om/view-om.component';
     ObjectLoadComponent,
     ReleaseConfigComponent,
     AddReleaseConfigComponent,
-    ViewOmComponent
+    ViewOmComponent,
+    ViewPmComponent
   ],
   imports: [
     BrowserModule,
