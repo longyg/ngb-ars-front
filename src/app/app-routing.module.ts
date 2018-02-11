@@ -12,6 +12,9 @@ import {ObjectLoadComponent} from './ne/object-load/object-load.component';
 import {ReleaseConfigComponent} from './ne/release-config/release-config.component';
 import {AddReleaseConfigComponent} from './ne/release-config/add-release-config/add-release-config.component';
 import {ViewOmComponent} from './ars/view-om/view-om.component';
+import {ViewPmComponent} from './ars/view-pm/view-pm.component';
+import {ViewCounterComponent} from './ars/view-counter/view-counter.component';
+import {ViewAlarmComponent} from './ars/view-alarm/view-alarm.component';
 
 const routes: Routes = [
   {path: '', redirectTo: '/home', pathMatch: 'full'},
@@ -26,7 +29,10 @@ const routes: Routes = [
   {path: 'ol', component: ObjectLoadComponent},
   {path: 'relconfig', component: ReleaseConfigComponent},
   {path: 'add-rel-config', component: AddReleaseConfigComponent},
-  {path: 'view-om/:id', component: ViewOmComponent}
+  {path: 'view-om/:id', component: ViewOmComponent},
+  {path: 'view-pm/:id', component: ViewPmComponent},
+  {path: 'view-counter/:id', component: ViewCounterComponent},
+  {path: 'view-alarm/:id', component: ViewAlarmComponent}
 ];
 
 @NgModule({

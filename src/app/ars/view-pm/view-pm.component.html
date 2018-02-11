@@ -1,3 +1,101 @@
-<p>
-  view-pm works!
-</p>
+<div class="card">
+  <div *ngIf="spec" class="card-body">
+    <h2 class="card-title">PM Data Load of {{spec.neType}} {{spec.neVersion}}</h2>
+
+    <div *ngFor="let adap of adaptations">
+      <div style="margin-top: 20px"><h5>Adaptation ID: {{replaceUnderscore(adap)}}</h5></div>
+      <div style="overflow: auto;">
+        <table>
+          <thead>
+          <tr>
+            <th>No.</th>
+            <th>Name</th>
+            <th>Name In Omes</th>
+            <th>Measured Object</th>
+            <th>Is supported by {{spec.neVersion}}</th>
+            <th>Supported other versions</th>
+            <th>Dimension</th>
+            <th>Avg Per Network</th>
+            <th>Max Per Network</th>
+            <th>Max Per NE</th>
+            <th>Nbr of Counters</th>
+            <th>N-1 Nbr of Counters</th>
+            <th>Delta</th>
+            <th>NW Agg Object</th>
+            <th>Time Agg</th>
+            <th>BH</th>
+            <th>Active</th>
+            <th>Default Interval</th>
+            <th>Minimum Interval</th>
+            <th>Storage</th>
+            <th>Bytes of counter</th>
+            <th>1 NE Measurements/h</th>
+            <th>1 NE Counters/h</th>
+            <th>1 NE hourly aggregation Counter/h</th>
+            <th>1 NE daily aggregation Counter/day</th>
+            <th>Max Measurements/h</th>
+            <th>Max Counters/h</th>
+            <th>Measurement Grouping Name</th>
+            <th>1 NE Raw rows in DB</th>
+            <th>1 NE Raw counters in DB</th>
+            <th>1 NE Space that will use for one measurement (Raw Data)</th>
+            <th>Max Raw rows in DB</th>
+            <th>Max Raw counters in DB</th>
+            <th>Max Space that will use for one measurement (Raw Data)</th>
+            <th>Total bytes per interval</th>
+            <th>Total Size per hour(GB)</th>
+            <th>Table Size per day (GB)</th>
+          </tr>
+          </thead>
+          <tbody>
+            <tr *ngFor="let meas of getMeasurements(adap);let n = index">
+              <td>{{n + 1}}</td>
+              <td [style.background-color]="meas.tableSizePerDay > 2 ? 'yellow': ''">
+                <span [style.color]="meas.totalSizePerHour > 2 ? 'red': ''">{{meas.name}}</span>
+              </td>
+              <td>{{meas.nameInOmes}}</td>
+              <td>{{meas.measuredObject}}</td>
+              <td>
+                <span *ngIf="meas.supported">Yes</span>
+                <span *ngIf="!meas.supported">No</span>
+              </td>
+              <td>{{meas.supportedOtherReleases}}</td>
+              <td>{{meas.dimension}}</td>
+              <td class="align-right-td">{{meas.avgPerNet}}</td>
+              <td class="align-right-td">{{meas.maxPerNet}}</td>
+              <td class="align-right-td">{{meas.maxPerNe}}</td>
+              <td class="align-right-td">{{meas.counterNumber}}</td>
+              <td class="align-right-td">{{meas.counterNumberOfLastVersion}}</td>
+              <td class="align-right-td">{{meas.delta}}</td>
+              <td>{{meas.aggObject}}</td>
+              <td>{{meas.timeAgg}}</td>
+              <td>{{meas.bh}}</td>
+              <td class="align-right-td">{{meas.active}}</td>
+              <td class="align-right-td">{{meas.defaultInterval}}</td>
+              <td class="align-right-td">{{meas.minimalInterval}}</td>
+              <td class="align-right-td">{{meas.storageDays}}</td>
+              <td class="align-right-td">{{meas.bytesPerCounter}}</td>
+              <td class="align-right-td">{{meas.mphPerNE}}</td>
+              <td class="align-right-td">{{meas.cphPerNE}}</td>
+              <td class="align-right-td">{{meas.chaPerNE}}</td>
+              <td class="align-right-td">{{meas.cdaPerNe}}</td>
+              <td class="align-right-td">{{meas.maxMph}}</td>
+              <td class="align-right-td">{{meas.maxCph}}</td>
+              <td>{{meas.measGroup}}</td>
+              <td class="align-right-td">{{meas.dbRrPerNe}}</td>
+              <td class="align-right-td">{{meas.dbRcPerNe}}</td>
+              <td class="align-right-td">{{meas.msPerNe}}</td>
+              <td class="align-right-td">{{meas.dbMaxRows}}</td>
+              <td class="align-right-td">{{meas.dbMaxCtrs}}</td>
+              <td class="align-right-td">{{meas.maxMs}}</td>
+              <td class="align-right-td">{{meas.totalBytesPerInterval}}</td>
+              <td class="align-right-td">{{meas.totalSizePerHour}}</td>
+              <td class="align-right-td">{{meas.tableSizePerDay}}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>

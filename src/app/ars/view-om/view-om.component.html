@@ -1,82 +1,80 @@
-<div class="container-fluid">
-  <div class="row">
-    <div class="col-md-1"></div>
-    <div *ngIf="spec" class="col-md-12">
-        <div><h3>Object Model of {{spec.neType}} {{spec.neVersion}}</h3></div>
-        <div style="overflow: auto">
-          <table class="omTable">
-            <thead>
-            <tr>
-              <th>No.</th>
-              <th>Topology</th>
-              <th>Alarming</th>
-              <th>Measured</th>
-              <!--
-              <th style="width:20px;">Configured</th>
-              <th style="width:20px;">Icon</th>
-              <th style="width:20px;">GUI launch</th>
-              <th style="width:60px;">3GPP NRM object</th>
-              <th style="width:30px;">Integration Version</th>
-              <th style="width:40px;">Integration (NASDA) </th>
-              -->
-              <th>Min</th>
-              <th>Max</th>
-              <th>Avg</th>
-              <th>Avg Per Network</th>
-              <th>Max Per Network</th>
-              <th>Max Per NE</th>
-              <th>Max NE</th>
-              <th>Avg NE</th>
-              <th>Max Per Root</th>
-              <th>Supported Releases</th>
-              <th>Transient/MO</th>
-              <th>Presentation</th>
-              <th>Name In OMeS</th>
-              <th>Adaptation ID</th>
-            </tr>
-            </thead>
-            <tbody>
-              <tr *ngFor="let oci of ocis; let n = index">
-                <td>{{n + 1}}</td>
-                <td style="border-bottom: 1px solid lightgray">
-                  <span *ngFor="let i of array(oci.column)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|- {{oci.name}}
-                </td>
-                <td class="align-center-td">
-                  <span *ngIf="oci.alarmingObject">x</span>
-                </td>
-                <td class="align-center-td">
-                  <span *ngIf="oci.measuredObject">x</span>
-                </td>
-                <!--
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                <td></td>
-                -->
-                <td class="align-right-td">{{oci.min}}</td>
-                <td class="align-right-td">{{oci.max}}</td>
-                <td class="align-right-td">{{oci.avg}}</td>
-                <td class="align-right-td">{{oci.avgPerNet}}</td>
-                <td class="align-right-td">{{oci.maxPerNet}}</td>
-                <td class="align-right-td">{{oci.maxPerNE}}</td>
-                <td class="align-right-td">{{oci.maxNePerNet}}</td>
-                <td class="align-right-td">{{oci.avgNePerNet}}</td>
-                <td class="align-right-td">{{oci.maxPerRoot}}</td>
-                <td>{{oci.supportedReleases}}</td>
-                <td>
-                  <span *ngIf="oci.transient">Transient</span>
-                  <span *ngIf="!oci.transient">MO</span>
-                </td>
-                <td>{{oci.presentation}}</td>
-                <td>{{oci.nameInOmes}}</td>
-                <td>{{oci.adaptationId}}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
+<div class="card">
+  <div *ngIf="spec" class="card-body">
+    <h2 class="card-title">Object Model of {{spec.neType}} {{spec.neVersion}}</h2>
+
+    <div style="overflow: auto">
+      <table>
+        <thead>
+        <tr>
+          <th>No.</th>
+          <th>Topology</th>
+          <th>Alarming</th>
+          <th>Measured</th>
+          <!--
+          <th style="width:20px;">Configured</th>
+          <th style="width:20px;">Icon</th>
+          <th style="width:20px;">GUI launch</th>
+          <th style="width:60px;">3GPP NRM object</th>
+          <th style="width:30px;">Integration Version</th>
+          <th style="width:40px;">Integration (NASDA) </th>
+          -->
+          <th>Min</th>
+          <th>Max</th>
+          <th>Avg</th>
+          <th>Avg Per Network</th>
+          <th>Max Per Network</th>
+          <th>Max Per NE</th>
+          <th>Max NE</th>
+          <th>Avg NE</th>
+          <th>Max Per Root</th>
+          <th>Supported Releases</th>
+          <th>Transient/MO</th>
+          <th>Presentation</th>
+          <th>Name In OMeS</th>
+          <th>Adaptation ID</th>
+        </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let oci of ocis; let n = index">
+            <td>{{n + 1}}</td>
+            <td style="border-bottom: 1px solid lightgray">
+              <span *ngFor="let i of array(oci.column)">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</span>|- {{oci.name}}
+            </td>
+            <td class="align-center-td">
+              <span *ngIf="oci.alarmingObject">x</span>
+            </td>
+            <td class="align-center-td">
+              <span *ngIf="oci.measuredObject">x</span>
+            </td>
+            <!--
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            <td></td>
+            -->
+            <td class="align-right-td">{{oci.min}}</td>
+            <td class="align-right-td">{{oci.max}}</td>
+            <td class="align-right-td">{{oci.avg}}</td>
+            <td class="align-right-td">{{oci.avgPerNet}}</td>
+            <td class="align-right-td">{{oci.maxPerNet}}</td>
+            <td class="align-right-td">{{oci.maxPerNE}}</td>
+            <td class="align-right-td">{{oci.maxNePerNet}}</td>
+            <td class="align-right-td">{{oci.avgNePerNet}}</td>
+            <td class="align-right-td">{{oci.maxPerRoot}}</td>
+            <td>{{oci.supportedReleases}}</td>
+            <td>
+              <span *ngIf="oci.transient">Transient</span>
+              <span *ngIf="!oci.transient">MO</span>
+            </td>
+            <td>{{oci.presentation}}</td>
+            <td>{{oci.nameInOmes}}</td>
+            <td>{{oci.adaptationId}}</td>
+          </tr>
+        </tbody>
+      </table>
     </div>
-    <div class="col-md-1"></div>
+
   </div>
 </div>

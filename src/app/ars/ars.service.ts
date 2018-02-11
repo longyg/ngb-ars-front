@@ -5,6 +5,8 @@ import {ARS} from './ars';
 import {ObjectModelSpec} from './view-om/om-spec';
 import {NeRelease} from '../ne/ne-release/ne-release';
 import {PmDataLoadSpec} from './view-pm/pm-spec';
+import {CounterSpec} from './view-counter/counter-spec';
+import {AlarmSpec} from './view-alarm/alarm-spec';
 
 @Injectable()
 export class ArsService {
@@ -23,12 +25,20 @@ export class ArsService {
     return this.http.post<ARS>('/api/ars/generate', ars);
   }
 
-  getOm(id: string): Observable<ObjectModelSpec> {
+  getObjectModelSpec(id: string): Observable<ObjectModelSpec> {
     return this.http.get<ObjectModelSpec>('/api/om/' + id);
   }
 
-  getPmDataLoad(id: string): Observable<PmDataLoadSpec> {
+  getPmDataLoadSpec(id: string): Observable<PmDataLoadSpec> {
     return this.http.get<PmDataLoadSpec>('/api/pmdl/' + id);
+  }
+
+  getCounterSpec(id: string): Observable<CounterSpec> {
+    return this.http.get<CounterSpec>('/api/counter/' + id);
+  }
+
+  getAlarmSpec(id: string): Observable<AlarmSpec> {
+    return this.http.get<AlarmSpec>('/api/alarm/' + id);
   }
 }
 

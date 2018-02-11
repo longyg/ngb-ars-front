@@ -1,15 +1,15 @@
 import { Component, OnInit } from '@angular/core';
-import {PmDataLoadSpec} from './pm-spec';
+import {AlarmSpec} from './alarm-spec';
 import {ActivatedRoute, ParamMap} from '@angular/router';
 import {ArsService} from '../ars.service';
 
 @Component({
-  selector: 'app-view-pm',
-  templateUrl: './view-pm.component.html',
-  styleUrls: ['./view-pm.component.scss']
+  selector: 'app-view-alarm',
+  templateUrl: './view-alarm.component.html',
+  styleUrls: ['./view-alarm.component.scss']
 })
-export class ViewPmComponent implements OnInit {
-  spec: PmDataLoadSpec;
+export class ViewAlarmComponent implements OnInit {
+  spec: AlarmSpec;
   adaptations: string[] = [];
 
   constructor(
@@ -18,10 +18,10 @@ export class ViewPmComponent implements OnInit {
   ) { }
 
   ngOnInit() {
-    this.route.paramMap.switchMap((params: ParamMap) => this.arsService.getPmDataLoadSpec(params.get('id')))
+    this.route.paramMap.switchMap((params: ParamMap) => this.arsService.getAlarmSpec(params.get('id')))
       .subscribe(data => {
         this.spec = data;
-        for (let adapId in this.spec.measurementMap) {
+        for (let adapId in this.spec.alarmMap) {
           this.adaptations.push(adapId);
         }
       });
@@ -37,7 +37,8 @@ export class ViewPmComponent implements OnInit {
     }
   }
 
-  getMeasurements(adapId: string): Object[] {
-    return this.spec.measurementMap[adapId];
+  getAlarms(adapId: string): Object[] {
+    return this.spec.alarmMap[adapId];
   }
+
 }

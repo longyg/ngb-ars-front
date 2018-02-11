@@ -21,11 +21,11 @@ export class ViewOmComponent implements OnInit {
 
 
   ngOnInit(): void {
-    this.route.paramMap.switchMap((params: ParamMap) => this.arsService.getOm(params.get('id')))
+    this.route.paramMap.switchMap((params: ParamMap) => this.arsService.getObjectModelSpec(params.get('id')))
       .subscribe(data => {
         this.spec = data;
-        for (let k in this.spec.ociMap) {
-          this.spec.ociMap[k].forEach(oci => {
+        for (let adapId in this.spec.ociMap) {
+          this.spec.ociMap[adapId].forEach(oci => {
             this.ocis.push(oci);
           })
         }

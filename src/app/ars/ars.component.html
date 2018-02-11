@@ -31,6 +31,12 @@
           <a *ngIf="entity.pmDataLoad" class="indigo-text waves-button" (click)="viewPm(entity.pmDataLoad)">
             <i class="fa fa-dashboard"> </i>PM Data Load
           </a>
+          <a *ngIf="entity.counter" class="indigo-text waves-button" (click)="viewCounter(entity.counter)">
+            <i class="fa fa-address-book"> </i>Counters
+          </a>
+          <a *ngIf="entity.alarm" class="indigo-text waves-button" (click)="viewAlarm(entity.alarm)">
+            <i class="fa fa-xing"> </i>Alarms
+          </a>
         </td>
         <td>
           <a class="red-text waves-button" (click)="deleteEntity(entity.id);confirmModal.show()" ><i class="fa fa-minus-circle"></i> Delete</a>

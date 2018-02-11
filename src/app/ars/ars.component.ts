@@ -53,6 +53,18 @@ export class ArsComponent implements OnInit {
     this.router.navigate(['/view-om', id]);
   }
 
+  viewPm(id: string): void {
+    this.router.navigate(['/view-pm', id]);
+  }
+
+  viewCounter(id: string): void {
+    this.router.navigate(['/view-counter', id]);
+  }
+
+  viewAlarm(id: string): void {
+    this.router.navigate(['/view-alarm', id]);
+  }
+
   initCreateArsForm(): void {
     this.createArsForm = this.fb.group({
       neType: '',
